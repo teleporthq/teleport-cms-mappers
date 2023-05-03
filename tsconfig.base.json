@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "incremental": true,
+        "module": "esnext",
+        "target": "ES5",
+        "declaration": true,
+        "declarationMap": true,
+        "lib": [
+            "es2015",
+            "dom"
+        ],
+        "sourceMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "baseUrl": "src",
+        "typeRoots": [
+            "node_modules/@types"
+        ]
+    },
+    "exclude": [
+        "node_modules",
+        "**/dist/**",
+        "./__tests__/**/*"
+    ]
+}
