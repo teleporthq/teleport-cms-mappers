@@ -4,6 +4,8 @@
   "main": "dist/contentful.js",
   "module": "dist/contentful.mjs",
   "types": "dist/contentful/index.d.ts",
+  "author": "teleportHQ",
+  "license": "MIT",
   "exports": {
     "./contentful": {
       "import": "./dist/contentful.mjs",
@@ -19,8 +21,7 @@
   },
   "scripts": {
     "lint": "eslint",
-    "build": "vite build",
-    "version": "release-it"
+    "build": "vite build"
   },
   "husky": {
     "hooks": {
@@ -28,7 +29,22 @@
     }
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "release-it": {
+    "git": {
+      "tagName": "v${version}"
+    },
+    "github": {
+      "commitMessage": "chore: release v${version}",
+      "release": false
+    },
+    "npm": false
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:teleporthq/teleport-cms-mappers.git"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.59.2",

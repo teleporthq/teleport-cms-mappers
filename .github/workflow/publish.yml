@@ -1,0 +1,37 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16.x"
+
+      - run: yarn
+      - run: yarn run lint
+      - run: yarn run build
+
+      - name: Authenticate with Registry
+        run: |
+          yarn logout
+          echo "@teleporthq:registry=https://registry.npmjs.org/" > .npmrc
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          npm whoami
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to npm
+        run: npm publish --yes
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
