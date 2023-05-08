@@ -1,5 +1,4 @@
 export const normalize = (content) => {
-  // Check if the content is a Strapi response
   if (content && content.data && Array.isArray(content.data)) {
     content = content.data;
   }
@@ -8,11 +7,11 @@ export const normalize = (content) => {
     return content.map((item) => normalize(item))
   }
 
-  if (typeof content !== 'object') {
+  if (typeof content !== 'object' || content === null) {
     return content
   }
 
-  if (content.id && content.attributes) {
+  if (content.id && (content.attributes || content.data)) {
     return normalizeObject(content)
   }
 
@@ -25,7 +24,7 @@ export const normalize = (content) => {
       return acc
     }
 
-    if (typeof content[key] === 'object') {
+    if (typeof content[key] === 'object' && content[key] !== null) {
       acc[key] = { ...normalizeObject(content[key]) }
 
       return acc
@@ -36,25 +35,25 @@ export const normalize = (content) => {
   }, {})
 }
 
+
 const normalizeObject = (content) => {
+  let normalizedAttributes = {}
   let normalizedData = {}
 
-  if (content.attributes) {
-    normalizedData = normalize(content.attributes)
+  if (content && content.attributes) {
+    normalizedAttributes = normalize(content.attributes)
   }
 
-  const result = {
+  if (content && content.data) {
+    normalizedData = normalize(content.data)
+  }
+
+  const result = content.id ? {
     id: content.id,
+    ...normalizedAttributes,
     ...normalizedData,
     ...content,
-  }
-
-  // Remove undefined values from the result object
-  Object.keys(result).forEach(key => {
-    if (result[key] === undefined) {
-      delete result[key];
-    }
-  });
+  } : content;
 
   return result;
 }
