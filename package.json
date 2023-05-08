@@ -1,9 +1,24 @@
 {
   "name": "@teleporthq/cms-mapper",
   "version": "0.0.0",
-  "main": "src/contentful/index.js",
+  "main": "dist/contentful.js",
+  "module": "dist/contentful.mjs",
+  "types": "dist/contentful/index.d.ts",
   "author": "teleportHQ",
   "license": "MIT",
+  "exports": {
+    "./contentful": {
+      "import": "./dist/contentful.mjs",
+      "require": "./dist/contentful.js",
+      "types": "./dist/contentful/index.d.ts"
+    },
+    "./strapi": {
+      "import": "./dist/strapi.mjs",
+      "require": "./dist/strapi.js",
+      "types": "./dist/strapi/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "lint": "eslint",
     "build": "vite build"
