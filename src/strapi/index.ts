@@ -1,18 +1,19 @@
-const normalizeNestedAttributes = (attributes)=> {
+const normalizeNestedAttributes = (attributes) => {
   const output = {};
 
   for (const key in attributes) {
     const value = attributes[key];
 
     if (
-      value !== null &&
       typeof value === "object" &&
+      value !== null &&
       "data" in value &&
       value.data !== null &&
       "id" in value.data &&
       "attributes" in value.data
     ) {
-      output[key] = normalize(value);
+      const normalizedValue = normalize(value);
+      output[key] = { id: value.data.id, ...normalizedValue };
     } else {
       output[key] = value;
     }
