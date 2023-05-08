@@ -1,59 +1,31 @@
-export const normalize = (content) => {
-  if (content && content.data && Array.isArray(content.data)) {
-    content = content.data;
-  }
-
-  if (Array.isArray(content)) {
-    return content.map((item) => normalize(item))
-  }
-
-  if (typeof content !== 'object' || content === null) {
-    return content
-  }
-
-  if (content.id && (content.attributes || content.data)) {
-    return normalizeObject(content)
-  }
-
-  return Object.keys(content).reduce((acc, key) => {
-    if (Array.isArray(content[key])) {
-      acc[key] = content[key].map((item) => {
-        return normalize(item)
-      })
-
-      return acc
-    }
-
-    if (typeof content[key] === 'object' && content[key] !== null) {
-      acc[key] = { ...normalizeObject(content[key]) }
-
-      return acc
-    }
-
-    acc[key] = content[key]
-    return acc
-  }, {})
+interface StrapiObject {
+  [key: string]: any;
 }
 
-
-const normalizeObject = (content) => {
-  let normalizedAttributes = {}
-  let normalizedData = {}
-
-  if (content && content.attributes) {
-    normalizedAttributes = normalize(content.attributes)
+function normalizeData(input: StrapiObject | null | undefined): StrapiObject | null {
+  if (input === null || input === undefined) {
+    return null;
   }
 
-  if (content && content.data) {
-    normalizedData = normalize(content.data)
+  if (Array.isArray(input)) {
+    return {
+      data: input.map(normalizeData),
+    };
   }
 
-  const result = content.id ? {
-    id: content.id,
-    ...normalizedAttributes,
-    ...normalizedData,
-    ...content,
-  } : content;
+  let output: StrapiObject = { ...input };
 
-  return result;
+  if ('attributes' in input) {
+    output = {
+      ...output,
+      ...normalizeData(input.attributes),
+    };
+    delete output.attributes;
+  }
+
+  if ('data' in input) {
+    output = normalizeData(input.data);
+  }
+
+  return output;
 }
