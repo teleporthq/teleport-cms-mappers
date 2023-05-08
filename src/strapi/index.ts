@@ -1,30 +1,49 @@
-interface StrapiObject {
-  [key: string]: any;
+const normalizeNestedAttributes = (attributes)=> {
+  const output = {};
+
+  for (const key in attributes) {
+    const value = attributes[key];
+
+    if (
+      value !== null &&
+      typeof value === "object" &&
+      "data" in value &&
+      value.data !== null &&
+      "id" in value.data &&
+      "attributes" in value.data
+    ) {
+      output[key] = normalize(value);
+    } else {
+      output[key] = value;
+    }
+  }
+
+  return output;
 }
 
-function normalizeData(input: StrapiObject | null | undefined): StrapiObject | null {
+export const normalize = (input) => {
   if (input === null || input === undefined) {
     return null;
   }
 
   if (Array.isArray(input)) {
     return {
-      data: input.map(normalizeData),
+      data: input.map(normalize),
     };
   }
 
-  let output: StrapiObject = { ...input };
+  let output = { ...input };
 
-  if ('attributes' in input) {
+  if (input.attributes) {
     output = {
       ...output,
-      ...normalizeData(input.attributes),
+      ...normalizeNestedAttributes(input.attributes),
     };
     delete output.attributes;
   }
 
-  if ('data' in input) {
-    output = normalizeData(input.data);
+  if (input.data) {
+    output = normalize(input.data);
   }
 
   return output;
