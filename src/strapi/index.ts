@@ -1,3 +1,17 @@
+function toPlainObject(obj) {
+  if (typeof obj !== "object" || obj === null) {
+    return obj;
+  }
+
+  const plainObj = {};
+
+  for (const key in obj) {
+    plainObj[key] = toPlainObject(obj[key]);
+  }
+
+  return plainObj;
+}
+
 const normalizeNestedAttributes = (attributes) => {
   const output = {};
 
@@ -15,7 +29,7 @@ const normalizeNestedAttributes = (attributes) => {
       const normalizedValue = normalize(value);
       output[key] = { id: value.data.id, ...normalizedValue };
     } else {
-      output[key] = value;
+      output[key] = toPlainObject(value);
     }
   }
 
@@ -23,7 +37,7 @@ const normalizeNestedAttributes = (attributes) => {
 }
 
 export const normalize = (input) => {
-  if (input === null || input === undefined) {
+  if (input === null || input === undefined || (typeof input === 'object' && !Object.keys(input).length )) {
     return null;
   }
 
