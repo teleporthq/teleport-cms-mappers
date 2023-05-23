@@ -1,3 +1,5 @@
+import { decode } from 'he'
+
 export const normalize = (input) => {
   if (
     input === null ||
@@ -12,11 +14,11 @@ export const normalize = (input) => {
   }
 
   const output = { ...input } as Record<string, Record<string, unknown>>
-  if (output?.title?.rendered) {
+  const existingTitle = output?.title?.rendered
+  if (existingTitle) {
     try {
-      const parser = new DOMParser()
-      const newTitle = parser.parseFromString(output?.title?.rendered || '', 'text/html')
-      output.title.rendered = newTitle?.documentElement?.textContent || output.title.rendered
+      const newTitle = decode(existingTitle as string)
+      output.title.rendered = newTitle || output.title.rendered
     } catch (error) {
       /* empty */
     }
