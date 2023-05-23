@@ -9,7 +9,8 @@ export default defineConfig({
     lib: {
       entry: {
         contentful: resolve(__dirname, "src/contentful/index.ts"),
-        strapi: resolve(__dirname, "src/strapi/index.ts")
+        strapi: resolve(__dirname, "src/strapi/index.ts"),
+        wordpress: resolve(__dirname, "src/wordpress/index.ts"),
       },
       formats: ["es", "cjs"],
     },

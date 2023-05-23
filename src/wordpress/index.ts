@@ -14,10 +14,12 @@ export const normalize = (input) => {
   const output = { ...input } as Record<string, Record<string, unknown>>
   if (output?.title?.rendered) {
     try {
-    const parser = new DOMParser()
-    const newTitle = parser.parseFromString(output?.title?.rendered || '', 'text/html')
-    output.title.rendered = newTitle?.documentElement?.textContent || output.title.rendered
-    } catch(error) {}
+      const parser = new DOMParser()
+      const newTitle = parser.parseFromString(output?.title?.rendered || '', 'text/html')
+      output.title.rendered = newTitle?.documentElement?.textContent || output.title.rendered
+    } catch (error) {
+      /* empty */
+    }
   }
 
   return output
