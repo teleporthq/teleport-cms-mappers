@@ -1,12 +1,16 @@
 import { decode } from 'he'
 
 export const normalize = (input) => {
-  if (
-    input === null ||
-    input === undefined ||
-    (typeof input === 'object' && !Object.keys(input).length)
-  ) {
-    return null
+  if (Array.isArray(input) && !input.length) {
+    return []
+  }
+
+  if (input === null || input === undefined) {
+    return input
+  }
+
+  if (typeof input === 'object' && !Object.keys(input).length) {
+    return {}
   }
 
   if (Array.isArray(input)) {
