@@ -1,65 +1,87 @@
 function toPlainObject(obj) {
-  if (typeof obj !== "object" || obj === null) {
-    return obj;
+  if (typeof obj !== 'object' || obj === null) {
+    return obj
   }
 
-  const plainObj = {};
+  const plainObj = {}
 
   for (const key in obj) {
-    plainObj[key] = toPlainObject(obj[key]);
+    plainObj[key] = toPlainObject(obj[key])
   }
 
-  return plainObj;
+  return plainObj
 }
 
 const normalizeNestedAttributes = (attributes) => {
-  const output = {};
+  const output = {}
 
   for (const key in attributes) {
-    const value = attributes[key];
+    const value = attributes[key]
 
     if (
-      typeof value === "object" &&
+      typeof value === 'object' &&
       value !== null &&
-      "data" in value &&
+      'data' in value &&
       value.data !== null &&
-      "id" in value.data &&
-      "attributes" in value.data
+      'id' in value.data &&
+      'attributes' in value.data
     ) {
-      const normalizedValue = normalize(value);
-      output[key] = { id: value.data.id, ...normalizedValue };
+      const normalizedValue = normalizeContent(value)
+      output[key] = { id: value.data.id, ...normalizedValue }
     } else {
-      output[key] = toPlainObject(value);
+      output[key] = toPlainObject(value)
     }
   }
 
-  return output;
+  return output
 }
 
-export const normalize = (input) => {
-  if (input === null || input === undefined || (typeof input === 'object' && !Object.keys(input).length )) {
-    return null;
+export const normalizeContent = (input) => {
+  if (
+    input === null ||
+    input === undefined ||
+    (typeof input === 'object' && !Object.keys(input).length)
+  ) {
+    return null
   }
 
   if (Array.isArray(input)) {
     return {
       data: input.map(normalize),
-    };
+    }
   }
 
-  let output = { ...input };
+  let output = { ...input }
 
   if (input.attributes) {
     output = {
       ...output,
       ...normalizeNestedAttributes(input.attributes),
-    };
-    delete output.attributes;
+    }
+    delete output.attributes
   }
 
   if (input.data) {
-    output = normalize(input.data);
+    output = normalizeContent(input.data)
   }
 
-  return output;
+  return output
+}
+
+export const normalize = (
+  content
+): {
+  meta: {
+    pagination?: {
+      total: number
+      limit: number
+      start: number
+    }
+  }
+  data: Array<unknown> | unknown
+} => {
+  return {
+    meta: content?.meta || {},
+    ...normalizeContent(content),
+  }
 }

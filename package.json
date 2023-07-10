@@ -26,7 +26,8 @@
   },
   "scripts": {
     "lint": "eslint",
-    "build": "vite build"
+    "build": "vite build",
+    "dev": "vite build --watch"
   },
   "husky": {
     "hooks": {
@@ -52,6 +53,7 @@
     "url": "git+ssh://git@github.com:teleporthq/teleport-cms-mappers.git"
   },
   "devDependencies": {
+    "@types/contentful-resolve-response": "^0.1.31",
     "@types/he": "^1.2.0",
     "@typescript-eslint/eslint-plugin": "^5.59.2",
     "@typescript-eslint/parser": "^5.59.2",
@@ -69,6 +71,7 @@
     "vite-plugin-eslint": "^1.8.1"
   },
   "dependencies": {
+    "contentful-resolve-response": "^1.7.0",
     "he": "^1.2.0"
   }
 }
