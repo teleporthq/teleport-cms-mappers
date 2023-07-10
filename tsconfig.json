@@ -2,11 +2,11 @@
     "compilerOptions": {
         "incremental": true,
         "module": "esnext",
-        "target": "ES5",
+        "target": "esnext",
         "declaration": true,
         "declarationMap": true,
         "lib": [
-            "es2015",
+            "esnext",
             "dom"
         ],
         "sourceMap": true,
@@ -27,7 +27,6 @@
     },
     "exclude": [
         "node_modules",
-        "**/dist/**",
-        "./__tests__/**/*"
+        "**/dist/**"
     ]
 }

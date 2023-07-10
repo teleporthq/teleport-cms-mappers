@@ -73,9 +73,9 @@ export const normalize = (
 ): {
   meta: {
     pagination?: {
-      total: number
-      limit: number
-      start: number
+      total?: number
+      limit?: number
+      start?: number
     }
   }
   data: Array<unknown> | unknown
