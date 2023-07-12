@@ -1,6 +1,8 @@
-export const normalize = (content) => {
+import resolveContentfulResponse from 'contentful-resolve-response'
+
+const normalizeContent = (content) => {
   if (Array.isArray(content)) {
-    return content.map((item) => normalize(item))
+    return content.map((item) => normalizeContent(item))
   }
 
   if (typeof content !== 'object') {
@@ -14,7 +16,7 @@ export const normalize = (content) => {
   return Object.keys(content).reduce((acc, key) => {
     if (Array.isArray(content[key])) {
       acc[key] = content[key].map((item) => {
-        return normalize(item)
+        return normalizeContent(item)
       })
 
       return acc
@@ -37,22 +39,22 @@ const normaliseObject = (content) => {
   let normalisedFile = {}
 
   if (content.fields) {
-    normalisedFields = normalize(content.fields)
+    normalisedFields = normalizeContent(content.fields)
 
     if (normalisedFields.file) {
       normalisedFile = {
         ...normalisedFile,
-        ...normalize(normalisedFields.file),
+        ...normalizeContent(normalisedFields.file),
       }
     }
   }
 
   if (content.sys) {
-    normalisedSys = normalize(content.sys)
+    normalisedSys = normalizeContent(content.sys)
   }
 
   if (content.file) {
-    normalisedFile = { ...normalisedFile, ...normalize(content.file) }
+    normalisedFile = { ...normalisedFile, ...normalizeContent(content.file) }
   }
 
   return {
@@ -60,5 +62,29 @@ const normaliseObject = (content) => {
     ...normalisedSys,
     ...normalisedFile,
     ...content,
+  }
+}
+
+export const normalize = (
+  content
+): {
+  meta: {
+    pagination?: {
+      total?: number
+      limit?: number
+      skip?: number
+    }
+  }
+  data: Array<unknown> | unknown
+} => {
+  return {
+    meta: {
+      pagination: {
+        ...('limit' in content && { limit: content.limit }),
+        ...('total' in content && { total: content.total }),
+        ...('skip' in content && { skip: content.skip }),
+      },
+    },
+    data: resolveContentfulResponse(normalizeContent(content)),
   }
 }
