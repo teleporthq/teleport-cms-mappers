@@ -1,5 +1,4 @@
 import type { NextApiRequest } from 'next'
-import { revalidatePath } from 'next/cache'
 import { join } from 'node:path'
 import process from 'node:process'
 
@@ -39,7 +38,7 @@ const ALLOWED_OPERATIONS: string[] = ['DeletedEntry', 'Entry']
 export const revalidate = async <T extends ContentfulWebhookResponse>(
   request: NextApiRequest,
   routeMappers: Record<string, ContentTypeMapping>
-) => {
+): Promise<string[]> => {
   const queryParams = request.query
   const content = request.body as T
   const operationType = content.sys?.type
@@ -76,10 +75,7 @@ export const revalidate = async <T extends ContentfulWebhookResponse>(
     pathsToRevalidate.push(path)
   })
 
-  pathsToRevalidate.forEach((path) => {
-    console.log(`[ON-DEMAND_ISR]: Clearing cahce for path - ${path} `)
-    revalidatePath(path)
-  })
+  return pathsToRevalidate
 }
 
 const calcualtePath = (content: ContentfulWebhookResponse, pageData: ContentTypeMapping) => {

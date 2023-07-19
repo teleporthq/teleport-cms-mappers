@@ -1,29 +1,26 @@
-import { revalidatePath as d } from "next/cache";
-import { join as p } from "node:path";
-import u from "node:process";
-const E = ["DeletedEntry", "Entry"], m = async (o, e) => {
-  const y = o.query, s = o.body, l = s.sys?.type;
-  if (!E.includes(l) || u.env?.TELEPORTHQ_ISR_TOKEN !== y?.TELEPORTHQ_ISR_TOKEN)
+import { join as d } from "node:path";
+import p from "node:process";
+const T = ["DeletedEntry", "Entry"], O = async (s, e) => {
+  const y = s.query, n = s.body, l = n.sys?.type;
+  if (!T.includes(l) || p.env?.TELEPORTHQ_ISR_TOKEN !== y?.TELEPORTHQ_ISR_TOKEN)
     return;
-  const c = s.sys?.contentType?.sys?.id, i = Object.values(e).filter(
-    (t) => t.contentType === c && t.type === "details"
-  )?.[0], n = [];
-  if (i) {
-    const t = r(s, i);
-    n.push(t);
+  const i = n.sys?.contentType?.sys?.id, c = Object.values(e).filter(
+    (t) => t.contentType === i && t.type === "details"
+  )?.[0], o = [];
+  if (c) {
+    const t = r(n, c);
+    o.push(t);
   }
-  Object.values(e).filter(
-    (t) => t.contentType === c && t.type === "list"
+  return Object.values(e).filter(
+    (t) => t.contentType === i && t.type === "list"
   ).forEach((t) => {
-    const a = r(s, t);
-    n.push(a);
-  }), n.forEach((t) => {
-    console.log(`[ON-DEMAND_ISR]: Clearing cahce for path - ${t} `), d(t);
-  });
-}, r = (o, e) => e?.dynamicRouteAttribute ? p(
+    const u = r(n, t);
+    o.push(u);
+  }), o;
+}, r = (s, e) => e?.dynamicRouteAttribute ? d(
   e.route,
-  e.dynamicRouteAttribute === "id" ? o.sys.id : o.fields.slug["en-US"]
+  e.dynamicRouteAttribute === "id" ? s.sys.id : s.fields.slug["en-US"]
 ) : e.route;
 export {
-  m as revalidate
+  O as revalidate
 };

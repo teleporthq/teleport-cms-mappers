@@ -24,6 +24,6 @@ interface ContentTypeMapping {
     type: 'details' | 'list';
     dynamicRouteAttribute?: string;
 }
-export declare const revalidate: <T extends ContentfulWebhookResponse>(request: NextApiRequest, routeMappers: Record<string, ContentTypeMapping>) => Promise<void>;
+export declare const revalidate: <T extends ContentfulWebhookResponse>(request: NextApiRequest, routeMappers: Record<string, ContentTypeMapping>) => Promise<string[]>;
 export {};
 //# sourceMappingURL=revalidate.d.ts.map
