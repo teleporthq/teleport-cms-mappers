@@ -1,9 +1,9 @@
 {
-  "name": "@teleporthq/cms-mapper",
+  "name": "@teleporthq/cms-mappers",
   "version": "0.0.0",
-  "main": "dist/contentful.js",
-  "module": "dist/contentful.mjs",
-  "types": "dist/contentful/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "author": "teleportHQ",
   "license": "MIT",
   "exports": {
@@ -11,6 +11,11 @@
       "import": "./dist/contentful.mjs",
       "require": "./dist/contentful.js",
       "types": "./dist/contentful/index.d.ts"
+    },
+    "./contentful/revalidate": {
+      "import": "./dist/contentful-revalidator.mjs",
+      "require": "./dist/contentful-revalidator.js",
+      "types": "./dist/contentful/revalidate.d.ts"
     },
     "./strapi": {
       "import": "./dist/strapi.mjs",
@@ -21,6 +26,11 @@
       "import": "./dist/wordpress.mjs",
       "require": "./dist/wordpress.js",
       "types": "./dist/wordpress/index.d.ts"
+    },
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./package.json": "./package.json"
   },
@@ -62,11 +72,12 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
+    "next": "^13.4.10",
     "prettier": "^2.8.8",
     "pretty-quick": "^3.1.3",
     "release-it": "^15.10.3",
     "typescript": "^5.0.4",
-    "vite": "^4.3.4",
+    "vite": "^4.4.4",
     "vite-plugin-dts": "^2.3.0",
     "vite-plugin-eslint": "^1.8.1"
   },

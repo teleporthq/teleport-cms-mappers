@@ -6,18 +6,18 @@ function o(t) {
     e[r] = o(t[r]);
   return e;
 }
-const n = (t) => {
+const i = (t) => {
   const e = {};
   for (const r in t) {
     const a = t[r];
     if (typeof a == "object" && a !== null && "data" in a && a.data !== null && "id" in a.data && "attributes" in a.data) {
-      const i = l(a);
-      e[r] = { id: a.data.id, ...i };
+      const l = n(a);
+      e[r] = { id: a.data.id, ...l };
     } else
       e[r] = o(a);
   }
   return e;
-}, l = (t) => {
+}, n = (t) => {
   if (t == null || typeof t == "object" && !Object.keys(t).length)
     return null;
   if (Array.isArray(t))
@@ -27,13 +27,13 @@ const n = (t) => {
   let e = { ...t };
   return t.attributes && (e = {
     ...e,
-    ...n(t.attributes)
-  }, delete e.attributes), t.data && (e = l(t.data)), e;
+    ...i(t.attributes)
+  }, delete e.attributes), t.data && (e = n(t.data)), e;
 }, s = (t) => ({
-  meta: (t == null ? void 0 : t.meta) || {},
-  ...l(t)
+  meta: t?.meta || {},
+  ...n(t)
 });
 export {
   s as normalize,
-  l as normalizeContent
+  n as normalizeContent
 };
