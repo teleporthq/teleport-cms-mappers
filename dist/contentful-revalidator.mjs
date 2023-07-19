@@ -4,9 +4,9 @@ const T = ["DeletedEntry", "Entry"], O = async (s, e) => {
   const y = s.query, n = s.body, l = n.sys?.type;
   if (!T.includes(l) || p.env?.TELEPORTHQ_ISR_TOKEN !== y?.TELEPORTHQ_ISR_TOKEN)
     return;
-  const i = n.sys?.contentType?.sys?.id, c = Object.values(e).filter(
+  const i = n.sys?.contentType?.sys?.id, o = [], c = Object.values(e).filter(
     (t) => t.contentType === i && t.type === "details"
-  )?.[0], o = [];
+  )?.[0];
   if (c) {
     const t = r(n, c);
     o.push(t);

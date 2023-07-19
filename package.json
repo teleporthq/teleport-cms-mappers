@@ -2,8 +2,8 @@
   "name": "@teleporthq/cms-mappers",
   "version": "0.0.0",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "module": "dist/contentful.mjs",
+  "types": "dist/contentful/index.d.ts",
   "author": "teleportHQ",
   "license": "MIT",
   "exports": {
@@ -28,9 +28,9 @@
       "types": "./dist/wordpress/index.d.ts"
     },
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/contentful.mjs",
+      "require": "./dist/contentful.js",
+      "types": "./dist/contentful/index.d.ts"
     },
     "./package.json": "./package.json"
   },

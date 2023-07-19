@@ -12,14 +12,13 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-       external: ["next", "next/cache", "node:path", "node:process"],
+       external: ["node:path", "node:process"],
     },
     emptyOutDir: true,
     outDir: "dist",
     target: "esnext",
     lib: {
       entry: {
-        index: resolve(__dirname, "src/index.ts"),
         contentful: resolve(__dirname, "src/contentful/index.ts"),
         strapi: resolve(__dirname, "src/strapi/index.ts"),
         wordpress: resolve(__dirname, "src/wordpress/index.ts"),

@@ -51,6 +51,7 @@ export const revalidate = async <T extends ContentfulWebhookResponse>(
   }
 
   const contentType = content.sys?.contentType?.sys?.id
+  const pathsToRevalidate: string[] = []
 
   /*
    Currently we auto-generate only one details page for a content type
@@ -58,8 +59,6 @@ export const revalidate = async <T extends ContentfulWebhookResponse>(
   const detailsPage = Object.values(routeMappers).filter(
     (value) => value.contentType === contentType && value.type === 'details'
   )?.[0]
-
-  const pathsToRevalidate: string[] = []
 
   if (detailsPage) {
     const path = calcualtePath(content, detailsPage)

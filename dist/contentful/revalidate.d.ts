@@ -1,4 +1,3 @@
-import type { NextApiRequest } from 'next';
 type OperationType = 'Entry' | 'DeleteEntry';
 interface ContentfulWebhookResponse {
     sys: {
