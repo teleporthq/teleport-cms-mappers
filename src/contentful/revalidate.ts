@@ -19,11 +19,12 @@ interface ContentfulWebhookResponse {
       }
     }
   }
-  fields: {
-    slug: {
+  fields: Record<
+    string,
+    {
       'en-US': string
     }
-  }
+  >
 }
 
 interface ContentTypeMapping {
@@ -41,6 +42,7 @@ export const revalidate = async <T extends ContentfulWebhookResponse>(
 ): Promise<string[]> => {
   const queryParams = request.query
   const content = request.body as T
+
   const operationType = content.sys?.type
   if (!ALLOWED_OPERATIONS.includes(operationType)) {
     return
@@ -78,10 +80,14 @@ export const revalidate = async <T extends ContentfulWebhookResponse>(
 }
 
 const calcualtePath = (content: ContentfulWebhookResponse, pageData: ContentTypeMapping) => {
-  return pageData?.dynamicRouteAttribute
-    ? join(
-        pageData.route,
-        pageData.dynamicRouteAttribute === 'id' ? content.sys.id : content.fields.slug['en-US']
-      )
-    : pageData.route
+  if (pageData?.dynamicRouteAttribute === 'id') {
+    return join(pageData.route, content.sys.id)
+  }
+  const field = content.fields?.[pageData.dynamicRouteAttribute]
+
+  if (field['en-US']) {
+    return join(pageData.route, field['en-US'])
+  }
+
+  return join(pageData.route, Object.keys(field)[0])
 }

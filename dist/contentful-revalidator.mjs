@@ -1,26 +1,28 @@
-import { join as d } from "node:path";
-import p from "node:process";
-const T = ["DeletedEntry", "Entry"], O = async (s, e) => {
-  const y = s.query, n = s.body, l = n.sys?.type;
-  if (!T.includes(l) || p.env?.TELEPORTHQ_ISR_TOKEN !== y?.TELEPORTHQ_ISR_TOKEN)
+import { join as r } from "node:path";
+import T from "node:process";
+const f = ["DeletedEntry", "Entry"], a = async (n, e) => {
+  const s = n.query, o = n.body, l = o.sys?.type;
+  if (!f.includes(l) || T.env?.TELEPORTHQ_ISR_TOKEN !== s?.TELEPORTHQ_ISR_TOKEN)
     return;
-  const i = n.sys?.contentType?.sys?.id, o = [], c = Object.values(e).filter(
-    (t) => t.contentType === i && t.type === "details"
+  const c = o.sys?.contentType?.sys?.id, i = [], y = Object.values(e).filter(
+    (t) => t.contentType === c && t.type === "details"
   )?.[0];
-  if (c) {
-    const t = r(n, c);
-    o.push(t);
+  if (y) {
+    const t = u(o, y);
+    i.push(t);
   }
   return Object.values(e).filter(
-    (t) => t.contentType === i && t.type === "list"
+    (t) => t.contentType === c && t.type === "list"
   ).forEach((t) => {
-    const u = r(n, t);
-    o.push(u);
-  }), o;
-}, r = (s, e) => e?.dynamicRouteAttribute ? d(
-  e.route,
-  e.dynamicRouteAttribute === "id" ? s.sys.id : s.fields.slug["en-US"]
-) : e.route;
+    const d = u(o, t);
+    i.push(d);
+  }), i;
+}, u = (n, e) => {
+  if (e?.dynamicRouteAttribute === "id")
+    return r(e.route, n.sys.id);
+  const s = n.fields?.[e.dynamicRouteAttribute];
+  return s["en-US"] ? r(e.route, s["en-US"]) : r(e.route, Object.keys(s)[0]);
+};
 export {
-  O as revalidate
+  a as revalidate
 };

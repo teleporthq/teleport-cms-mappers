@@ -11,11 +11,9 @@ interface ContentfulWebhookResponse {
             };
         };
     };
-    fields: {
-        slug: {
-            'en-US': string;
-        };
-    };
+    fields: Record<string, {
+        'en-US': string;
+    }>;
 }
 interface ContentTypeMapping {
     contentType: string;
