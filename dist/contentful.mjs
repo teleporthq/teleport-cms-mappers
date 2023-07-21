@@ -1,4 +1,4 @@
-var L = Function.prototype.toString, m = Object.create, E = Object.defineProperty, C = Object.getOwnPropertyDescriptor, w = Object.getOwnPropertyNames, k = Object.getOwnPropertySymbols, M = Object.getPrototypeOf, S = Object.prototype, B = S.hasOwnProperty, R = S.propertyIsEnumerable, _ = typeof k == "function", T = typeof WeakMap == "function", j = function() {
+var P = Function.prototype.toString, m = Object.create, E = Object.defineProperty, M = Object.getOwnPropertyDescriptor, w = Object.getOwnPropertyNames, k = Object.getOwnPropertySymbols, C = Object.getPrototypeOf, S = Object.prototype, B = S.hasOwnProperty, R = S.propertyIsEnumerable, _ = typeof k == "function", T = typeof WeakMap == "function", j = function() {
   if (T)
     return function() {
       return /* @__PURE__ */ new WeakMap();
@@ -21,21 +21,21 @@ var L = Function.prototype.toString, m = Object.create, E = Object.definePropert
   return function() {
     return new e();
   };
-}(), P = function(e, r) {
-  var n = e.__proto__ || M(e);
+}(), I = function(e, r) {
+  var n = e.__proto__ || C(e);
   if (!n)
     return m(null);
   var t = n.constructor;
   if (t === r.Object)
     return n === r.Object.prototype ? {} : m(n);
-  if (~L.call(t).indexOf("[native code]"))
+  if (~P.call(t).indexOf("[native code]"))
     try {
       return new t();
     } catch {
     }
   return m(n);
 }, z = function(e, r, n, t) {
-  var f = P(e, r);
+  var f = I(e, r);
   t.set(e, f);
   for (var s in e)
     B.call(e, s) && (f[s] = n(e[s], t));
@@ -44,11 +44,11 @@ var L = Function.prototype.toString, m = Object.create, E = Object.definePropert
       a = i[o], R.call(e, a) && (f[a] = n(e[a], t));
   return f;
 }, b = function(e, r, n, t) {
-  var f = P(e, r);
+  var f = I(e, r);
   t.set(e, f);
   for (var s = _ ? w(e).concat(k(e)) : w(e), i = 0, o = s.length, l = void 0, a = void 0; i < o; ++i)
     if (l = s[i], l !== "callee" && l !== "caller")
-      if (a = C(e, l), a) {
+      if (a = M(e, l), a) {
         !a.get && !a.set && (a.value = n(e[l], t));
         try {
           E(f, l, a);
@@ -61,11 +61,11 @@ var L = Function.prototype.toString, m = Object.create, E = Object.definePropert
 }, U = function(e) {
   var r = "";
   return e.global && (r += "g"), e.ignoreCase && (r += "i"), e.multiline && (r += "m"), e.unicode && (r += "u"), e.sticky && (r += "y"), r;
-}, W = Array.isArray, F = Object.getPrototypeOf, N = function() {
+}, W = Array.isArray, F = Object.getPrototypeOf, K = function() {
   return typeof globalThis < "u" ? globalThis : typeof self < "u" ? self : typeof window < "u" ? window : typeof global < "u" ? global : (console && console.error && console.error('Unable to locate global object, returning "this".'), this);
 }();
 function O(e, r) {
-  var n = !!(r && r.isStrict), t = r && r.realm || N, f = n ? b : z, s = function(i, o) {
+  var n = !!(r && r.isStrict), t = r && r.realm || K, f = n ? b : z, s = function(i, o) {
     if (!i || typeof i != "object")
       return i;
     if (o.has(i))
@@ -87,8 +87,8 @@ function O(e, r) {
     if (i instanceof t.RegExp)
       return u = new a(i.source, i.flags || U(i)), u.lastIndex = i.lastIndex, u;
     if (t.Map && i instanceof t.Map)
-      return u = new a(), o.set(i, u), i.forEach(function(d, I) {
-        u.set(I, s(d, o));
+      return u = new a(), o.set(i, u), i.forEach(function(d, L) {
+        u.set(L, s(d, o));
       }), u;
     if (t.Set && i instanceof t.Set)
       return u = new a(), o.set(i, u), i.forEach(function(d) {
@@ -121,7 +121,7 @@ O.strict = function(r, n) {
     realm: n ? n.realm : void 0
   });
 };
-var K = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
+var N = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
   return typeof e;
 } : function(e) {
   return e && typeof Symbol == "function" && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
@@ -192,7 +192,7 @@ var p = {}, V = function(r) {
 }, q = function e(r, n, t, f) {
   if (n(r))
     return t(r);
-  if (r && (typeof r > "u" ? "undefined" : K(r)) === "object") {
+  if (r && (typeof r > "u" ? "undefined" : N(r)) === "object") {
     for (var s in r)
       r.hasOwnProperty(s) && (r[s] = e(r[s], n, t, f));
     f && (r = Y(r));
@@ -252,8 +252,7 @@ const y = (e) => {
       ..."limit" in e && { limit: e.limit },
       ..."total" in e && { total: e.total },
       ..."skip" in e && { skip: e.skip },
-      hasNextPage: e.skip * e.limit < e.total,
-      hasPrevPage: e.skip > 0
+      pages: Math.ceil(e.total / e.limit)
     }
   },
   data: X(y(e))
