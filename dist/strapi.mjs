@@ -22,26 +22,26 @@ const s = (a) => {
     return null;
   if (Array.isArray(a))
     return {
-      data: a.map(d)
+      data: a.map(n)
     };
   let t = { ...a };
   return a.attributes && (t = {
     ...t,
     ...s(a.attributes)
   }, delete t.attributes), a.data && (t = r(a.data)), t;
-}, d = (a) => ({
+}, n = (a) => ({
   meta: {
     ...a == null ? void 0 : a.meta,
     pagination: {
       total: a.meta.pagination.total,
       limit: a.meta.pagination.limit,
       start: a.meta.pagination.start,
-      pages: Math.ceil(a.meta.total / a.meta.limit)
+      pages: Math.ceil(a.meta.pagination.total / a.meta.pagination.limit)
     }
   },
   ...r(a)
 });
 export {
-  d as normalize,
+  n as normalize,
   r as normalizeContent
 };
