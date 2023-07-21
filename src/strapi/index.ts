@@ -76,12 +76,20 @@ export const normalize = (
       total?: number
       limit?: number
       start?: number
+      hasNextPage?: boolean
+      hasPrevPage?: boolean
     }
   }
   data: Array<unknown> | unknown
 } => {
   return {
-    meta: content?.meta || {},
+    meta: {...content?.meta, pagination: {
+      total: content.meta.pagination.total,
+      limit: content.meta.pagination.limit,
+      start: content.meta.pagination.start,
+      hasNextPage: content.meta.pagination.limit * content.meta.pagination.start < content.meta.pagination.total,
+      hasPrevPage: content.meta.pagination.start > 0,
+    }},
     ...normalizeContent(content),
   }
 }

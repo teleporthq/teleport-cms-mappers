@@ -73,6 +73,8 @@ export const normalize = (
       total?: number
       limit?: number
       skip?: number
+      hasNextPage?: boolean
+      hasPrevPage?: boolean
     }
   }
   data: Array<unknown> | unknown
@@ -83,6 +85,8 @@ export const normalize = (
         ...('limit' in content && { limit: content.limit }),
         ...('total' in content && { total: content.total }),
         ...('skip' in content && { skip: content.skip }),
+        hasNextPage: content.skip * content.limit < content.total,
+        hasPrevPage: content.skip > 0
       },
     },
     data: resolveContentfulResponse(normalizeContent(content)),
