@@ -88,7 +88,7 @@ export const normalize = (
         total: content.meta.pagination.total,
         limit: content.meta.pagination.limit,
         start: content.meta.pagination.start,
-        pages: Math.ceil(content.meta.pagination.total / content.meta.pagination.limit),
+        pages: content.meta.pagination.total / content.meta.pagination.limit,
       },
     },
     ...normalizeContent(content),

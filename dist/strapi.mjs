@@ -36,7 +36,7 @@ const s = (a) => {
       total: a.meta.pagination.total,
       limit: a.meta.pagination.limit,
       start: a.meta.pagination.start,
-      pages: Math.ceil(a.meta.pagination.total / a.meta.pagination.limit)
+      pages: a.meta.pagination.total / a.meta.pagination.limit
     }
   },
   ...r(a)

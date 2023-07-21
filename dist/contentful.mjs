@@ -1,4 +1,4 @@
-var P = Function.prototype.toString, m = Object.create, E = Object.defineProperty, M = Object.getOwnPropertyDescriptor, w = Object.getOwnPropertyNames, k = Object.getOwnPropertySymbols, C = Object.getPrototypeOf, S = Object.prototype, B = S.hasOwnProperty, R = S.propertyIsEnumerable, _ = typeof k == "function", T = typeof WeakMap == "function", j = function() {
+var P = Function.prototype.toString, m = Object.create, E = Object.defineProperty, C = Object.getOwnPropertyDescriptor, w = Object.getOwnPropertyNames, k = Object.getOwnPropertySymbols, M = Object.getPrototypeOf, _ = Object.prototype, B = _.hasOwnProperty, R = _.propertyIsEnumerable, h = typeof k == "function", T = typeof WeakMap == "function", j = function() {
   if (T)
     return function() {
       return /* @__PURE__ */ new WeakMap();
@@ -22,7 +22,7 @@ var P = Function.prototype.toString, m = Object.create, E = Object.definePropert
     return new e();
   };
 }(), I = function(e, r) {
-  var n = e.__proto__ || C(e);
+  var n = e.__proto__ || M(e);
   if (!n)
     return m(null);
   var t = n.constructor;
@@ -39,16 +39,16 @@ var P = Function.prototype.toString, m = Object.create, E = Object.definePropert
   t.set(e, f);
   for (var s in e)
     B.call(e, s) && (f[s] = n(e[s], t));
-  if (_)
+  if (h)
     for (var i = k(e), o = 0, l = i.length, a = void 0; o < l; ++o)
       a = i[o], R.call(e, a) && (f[a] = n(e[a], t));
   return f;
 }, b = function(e, r, n, t) {
   var f = I(e, r);
   t.set(e, f);
-  for (var s = _ ? w(e).concat(k(e)) : w(e), i = 0, o = s.length, l = void 0, a = void 0; i < o; ++i)
+  for (var s = h ? w(e).concat(k(e)) : w(e), i = 0, o = s.length, l = void 0, a = void 0; i < o; ++i)
     if (l = s[i], l !== "callee" && l !== "caller")
-      if (a = M(e, l), a) {
+      if (a = C(e, l), a) {
         !a.get && !a.set && (a.value = n(e[l], t));
         try {
           E(f, l, a);
@@ -234,8 +234,8 @@ var p = {}, V = function(r) {
 };
 const y = (e) => {
   var r, n;
-  return Array.isArray(e) ? e.map((t) => y(t)) : typeof e != "object" ? e : (r = Object.keys(e.fields || {})) != null && r.length && ((n = Object.keys(e.sys || {})) != null && n.length) ? h(e) : Object.keys(e).reduce((t, f) => Array.isArray(e[f]) ? (t[f] = e[f].map((s) => y(s)), t) : typeof e[f] == "object" ? (t[f] = { ...h(e[f]) }, t) : (t[f] = e[f], t), {});
-}, h = (e) => {
+  return Array.isArray(e) ? e.map((t) => y(t)) : typeof e != "object" ? e : (r = Object.keys(e.fields || {})) != null && r.length && ((n = Object.keys(e.sys || {})) != null && n.length) ? S(e) : Object.keys(e).reduce((t, f) => Array.isArray(e[f]) ? (t[f] = e[f].map((s) => y(s)), t) : typeof e[f] == "object" ? (t[f] = { ...S(e[f]) }, t) : (t[f] = e[f], t), {});
+}, S = (e) => {
   let r = {}, n = {}, t = {};
   return e.fields && (r = y(e.fields), r.file && (t = {
     ...t,
@@ -252,7 +252,7 @@ const y = (e) => {
       ..."limit" in e && { limit: e.limit },
       ..."total" in e && { total: e.total },
       ..."skip" in e && { skip: e.skip },
-      pages: Math.ceil(e.total / e.limit)
+      pages: e.total / e.limit
     }
   },
   data: X(y(e))
