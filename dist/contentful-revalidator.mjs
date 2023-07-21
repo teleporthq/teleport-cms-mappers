@@ -1,28 +1,25 @@
-import { join as r } from "node:path";
-import T from "node:process";
-const f = ["DeletedEntry", "Entry"], a = async (n, e) => {
-  const s = n.query, o = n.body, l = o.sys?.type;
-  if (!f.includes(l) || T.env?.TELEPORTHQ_ISR_TOKEN !== s?.TELEPORTHQ_ISR_TOKEN)
-    return;
-  const c = o.sys?.contentType?.sys?.id, i = [], y = Object.values(e).filter(
-    (t) => t.contentType === c && t.type === "details"
-  )?.[0];
-  if (y) {
-    const t = u(o, y);
-    i.push(t);
-  }
-  return Object.values(e).filter(
-    (t) => t.contentType === c && t.type === "list"
-  ).forEach((t) => {
-    const d = u(o, t);
-    i.push(d);
-  }), i;
+import { join as i } from "node:path";
+import y from "node:process";
+const d = ["DeletedEntry", "Entry"], f = async (n, e) => {
+  const t = [];
+  if (y.env?.TELEPORTHQ_ISR_TOKEN !== n.query?.TELEPORTHQ_ISR_TOKEN)
+    return t;
+  const s = n.body;
+  if (!d.includes(s.sys?.type))
+    return console.log(`[ON-DEMAND_ISR]: Received an event that is not allowed: ${s.sys?.type}`), t;
+  const o = s.sys?.contentType?.sys?.id, c = Object.values(e).filter((r) => {
+    if (r.contentType === o)
+      return r;
+  }).map((r) => u(s, r));
+  return t.push(...c), t;
 }, u = (n, e) => {
+  if (!("dynamicRouteAttribute" in e))
+    return e.route;
   if (e?.dynamicRouteAttribute === "id")
-    return r(e.route, n.sys.id);
-  const s = n.fields?.[e.dynamicRouteAttribute];
-  return s["en-US"] ? r(e.route, s["en-US"]) : r(e.route, Object.keys(s)[0]);
+    return i(e.route, n.sys.id);
+  const t = n.fields?.[e.dynamicRouteAttribute];
+  return t["en-US"] ? i(e.route, t["en-US"]) : i(e.route, Object.keys(t)[0]);
 };
 export {
-  a as revalidate
+  f as revalidate
 };

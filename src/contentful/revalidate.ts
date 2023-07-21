@@ -1,7 +1,18 @@
-import type { NextApiRequest } from 'next'
 import { join } from 'node:path'
 import process from 'node:process'
+import type { NextApiRequest, ContentTypeMapping } from '../types'
 
+/*
+  This is a common question open for all CMS integrations.
+  Question:
+    Sohould the save operations from the CMS needs to be handled ?
+    - If yes, the content will always be in sync with the CMS and with the GUI.
+      As GUI loads the data using REST calls, the data is always up to date.
+      But the down side is, it triggers a lot of Save operations. Resulting in
+      a lot of revalidation calls.
+    - If no, the content will be in sync with the CMS/GUI. But get's updated on
+      publish / delete / create etc..
+*/
 type OperationType = 'Entry' | 'DeleteEntry'
 
 interface ContentfulWebhookResponse {
@@ -27,67 +38,54 @@ interface ContentfulWebhookResponse {
   >
 }
 
-interface ContentTypeMapping {
-  contentType: string
-  route: string
-  type: 'details' | 'list'
-  dynamicRouteAttribute?: string
-}
-
 const ALLOWED_OPERATIONS: string[] = ['DeletedEntry', 'Entry']
 
-export const revalidate = async <T extends ContentfulWebhookResponse>(
-  request: NextApiRequest,
+export const revalidate = async (
+  request: NextApiRequest<ContentfulWebhookResponse, unknown>,
   routeMappers: Record<string, ContentTypeMapping>
 ): Promise<string[]> => {
-  const queryParams = request.query
-  const content = request.body as T
-
-  const operationType = content.sys?.type
-  if (!ALLOWED_OPERATIONS.includes(operationType)) {
-    return
+  const pathsToRevalidate: string[] = []
+  if (process.env?.TELEPORTHQ_ISR_TOKEN !== request.query?.['TELEPORTHQ_ISR_TOKEN']) {
+    return pathsToRevalidate
   }
 
-  if (process.env?.TELEPORTHQ_ISR_TOKEN !== queryParams?.['TELEPORTHQ_ISR_TOKEN']) {
-    return
+  const content = request.body
+  if (!ALLOWED_OPERATIONS.includes(content.sys?.type)) {
+    console.log(`[ON-DEMAND_ISR]: Received an event that is not allowed: ${content.sys?.type}`)
+    return pathsToRevalidate
   }
 
   const contentType = content.sys?.contentType?.sys?.id
-  const pathsToRevalidate: string[] = []
 
-  /*
-   Currently we auto-generate only one details page for a content type
-  */
-  const detailsPage = Object.values(routeMappers).filter(
-    (value) => value.contentType === contentType && value.type === 'details'
-  )?.[0]
+  const paths = Object.values(routeMappers)
+    .filter((item) => {
+      if (item.contentType === contentType) {
+        return item
+      }
+    })
+    .map((item) => resolveDynamicAttribte(content, item))
 
-  if (detailsPage) {
-    const path = calcualtePath(content, detailsPage)
-    pathsToRevalidate.push(path)
-  }
-
-  const listingPages = Object.values(routeMappers).filter(
-    (value) => value.contentType === contentType && value.type === 'list'
-  )
-
-  listingPages.forEach((listingPage) => {
-    const path = calcualtePath(content, listingPage)
-    pathsToRevalidate.push(path)
-  })
+  pathsToRevalidate.push(...paths)
 
   return pathsToRevalidate
 }
 
-const calcualtePath = (content: ContentfulWebhookResponse, pageData: ContentTypeMapping) => {
-  if (pageData?.dynamicRouteAttribute === 'id') {
-    return join(pageData.route, content.sys.id)
+const resolveDynamicAttribte = (
+  content: ContentfulWebhookResponse,
+  routeData: ContentTypeMapping
+) => {
+  if ('dynamicRouteAttribute' in routeData === false) {
+    return routeData.route
   }
-  const field = content.fields?.[pageData.dynamicRouteAttribute]
+
+  if (routeData?.dynamicRouteAttribute === 'id') {
+    return join(routeData.route, content.sys.id)
+  }
+  const field = content.fields?.[routeData.dynamicRouteAttribute]
 
   if (field['en-US']) {
-    return join(pageData.route, field['en-US'])
+    return join(routeData.route, field['en-US'])
   }
 
-  return join(pageData.route, Object.keys(field)[0])
+  return join(routeData.route, Object.keys(field)[0])
 }

@@ -1,3 +1,4 @@
+import type { NextApiRequest, ContentTypeMapping } from '../types';
 type OperationType = 'Entry' | 'DeleteEntry';
 interface ContentfulWebhookResponse {
     sys: {
@@ -15,12 +16,6 @@ interface ContentfulWebhookResponse {
         'en-US': string;
     }>;
 }
-interface ContentTypeMapping {
-    contentType: string;
-    route: string;
-    type: 'details' | 'list';
-    dynamicRouteAttribute?: string;
-}
-export declare const revalidate: <T extends ContentfulWebhookResponse>(request: NextApiRequest, routeMappers: Record<string, ContentTypeMapping>) => Promise<string[]>;
+export declare const revalidate: (request: NextApiRequest<ContentfulWebhookResponse, unknown>, routeMappers: Record<string, ContentTypeMapping>) => Promise<string[]>;
 export {};
 //# sourceMappingURL=revalidate.d.ts.map
