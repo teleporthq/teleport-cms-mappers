@@ -81,14 +81,16 @@ export const normalize = (
   }
   data: Array<unknown> | unknown
 } => {
+  let pages
+  if (content.meta.pagination.total && content.meta.pagination.limit) {
+    pages = Math.ceil(content.meta.pagination.total / content.meta.pagination.limit)
+  }
   return {
     meta: {
       ...content?.meta,
       pagination: {
-        total: content.meta.pagination.total,
-        limit: content.meta.pagination.limit,
-        start: content.meta.pagination.start,
-        pages: content.meta.pagination.total / content.meta.pagination.limit,
+        ...content?.meta?.pagination,
+        pages,
       },
     },
     ...normalizeContent(content),

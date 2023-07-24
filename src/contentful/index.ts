@@ -84,7 +84,8 @@ export const normalize = (
         ...('limit' in content && { limit: content.limit }),
         ...('total' in content && { total: content.total }),
         ...('skip' in content && { skip: content.skip }),
-        pages: content.total / content.limit,
+        ...('limit' in content &&
+          'total' in content && { pages: Math.ceil(content.total / content.limit) }),
       },
     },
     data: resolveContentfulResponse(normalizeContent(content)),
