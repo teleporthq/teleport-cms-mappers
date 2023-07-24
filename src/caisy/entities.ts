@@ -1,9 +1,11 @@
 import { mapResponse } from "./utils";
 
-export const getData = async (
+export const getEntitiesData = async (params: {
   projectId: string,
   query: string,
+}
 ) => {
+  const { projectId, query } = params
   const url = `https://cloud.caisy.io/api/v3/e/${projectId}/graphql`;
 
   const response = await fetch(url, {

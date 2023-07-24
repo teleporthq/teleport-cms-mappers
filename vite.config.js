@@ -11,6 +11,7 @@ export default defineConfig({
         contentful: resolve(__dirname, "src/contentful/index.ts"),
         strapi: resolve(__dirname, "src/strapi/index.ts"),
         wordpress: resolve(__dirname, "src/wordpress/index.ts"),
+        caisy: resolve(__dirname, "src/caisy/index.ts"),
       },
       formats: ["es", "cjs"],
     },
