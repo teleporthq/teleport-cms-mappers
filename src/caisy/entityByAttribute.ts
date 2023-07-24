@@ -10,7 +10,6 @@ export const getDataByAttribute = async (params: {
   const url = `https://cloud.caisy.io/api/v3/e/${projectId}/graphql`;
 
   // const variables = paramsVariables.reduce((acc: Record<string, string>, param) => {
-  //   //@ts-ignore
   //   acc[param] = params?.[`${param}`] || ''
   //   return acc
   // }, {})
@@ -25,7 +24,6 @@ export const getDataByAttribute = async (params: {
       query,
       variables: {
         // value: params['name']
-        //@ts-ignore
         value: params?.[`${attribute}`] || ''
       }
     }),
