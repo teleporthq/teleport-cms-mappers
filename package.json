@@ -22,6 +22,11 @@
       "require": "./dist/wordpress.js",
       "types": "./dist/wordpress/index.d.ts"
     },
+    "./caisy": {
+      "import": "./dist/caisy.mjs",
+      "require": "./dist/caisy.js",
+      "types": "./dist/caisy/index.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
