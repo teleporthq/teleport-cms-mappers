@@ -5,7 +5,7 @@ export declare const normalize: (content: any) => {
             total?: number;
             limit?: number;
             start?: number;
-            pages?: number;
+            hasNextPage?: boolean;
         };
     };
     data: Array<unknown> | unknown;

@@ -32,12 +32,15 @@ export const normalizeContent = (input) => {
 }
 
 export const normalize = async (
-  content
+  content,
+  requestParams
 ): Promise<{
   meta: {
     pagination?: {
       total?: number
       pages?: number
+      hasNextPage?: boolean
+      hasPrevPage?: boolean
     }
   }
   data: Array<unknown> | unknown
@@ -45,11 +48,14 @@ export const normalize = async (
   const headers = Object.fromEntries(content.headers.entries())
   const response = await content.json()
 
+  const currentPage = parseInt(requestParams.page)
   return {
     meta: {
       pagination: {
         ...(headers['x-wp-total'] && { total: parseInt(headers['x-wp-total']) }),
         ...(headers['x-wp-totalpages'] && { pages: parseInt(headers['x-wp-totalpages']) }),
+        hasNextPage: currentPage < parseInt(headers['x-wp-totalpages']),
+        hasPrevPage: currentPage > 0,
       },
     },
     data: normalizeContent(response),

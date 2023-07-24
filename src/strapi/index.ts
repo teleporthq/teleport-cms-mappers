@@ -76,7 +76,7 @@ export const normalize = (
       total?: number
       limit?: number
       start?: number
-      pages?: number
+      hasNextPage?: boolean
     }
   }
   data: Array<unknown> | unknown
@@ -85,12 +85,19 @@ export const normalize = (
   if (content?.meta?.pagination?.total && content?.meta?.pagination?.limit) {
     pages = Math.ceil(content.meta.pagination.total / content.meta.pagination.limit)
   }
+
+  const hasNextPage =
+    content?.meta?.pagination?.limit + content.meta.pagination.start <
+    content?.meta?.pagination?.total
+  const hasPrevPage = content?.meta?.pagination?.limit?.start > 0
   return {
     meta: {
       ...content?.meta,
       pagination: {
         ...content?.meta?.pagination,
         ...(!!pages && { pages }),
+        hasNextPage,
+        hasPrevPage,
       },
     },
     ...normalizeContent(content),

@@ -73,11 +73,15 @@ export const normalize = (
       total?: number
       limit?: number
       skip?: number
-      pages?: number
+      pages: number
+      hasNextPage?: boolean
+      hasPrevPage?: boolean
     }
   }
   data: Array<unknown> | unknown
 } => {
+  const hasNextPage = content.limit + content.skip < content.total
+  const hasPrevPage = content.skip > 0
   return {
     meta: {
       pagination: {
@@ -86,6 +90,8 @@ export const normalize = (
         ...('skip' in content && { skip: content.skip }),
         ...('limit' in content &&
           'total' in content && { pages: Math.ceil(content.total / content.limit) }),
+        hasNextPage,
+        hasPrevPage,
       },
     },
     data: resolveContentfulResponse(normalizeContent(content)),
