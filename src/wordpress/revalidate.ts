@@ -1,23 +1,8 @@
 import { join } from 'node:path'
-import type { NextApiRequest, ContentTypeMapping } from '../types'
+import type { NextApiRequest, ContentTypeMapping, WordpressWebhookResponse } from '../types'
 
 interface WordpressWebhookHeaders {
   'x-wp-webhook-name': string
-}
-
-interface WordpressWebhookResponse {
-  post_id: number
-  post: {
-    ID: number
-    post_author: string
-    post_status: string
-    /* post_type refers to the slug that wordpress used to identify the content type.
-      TODO: @JK-@Ionut Test it on more complex contentType names from the GUI.
-      The GUI uses rest_base for loading data and entiries. Since wp-webhooks is a 3rd party
-      plugin we don't have much control on what filed it used to change it use rest_base.
-    */
-    post_type: string
-  }
 }
 
 const ALLOWED_OPERATIONS: string[] = ['post_update']

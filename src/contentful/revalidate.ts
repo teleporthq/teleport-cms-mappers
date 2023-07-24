@@ -1,6 +1,7 @@
 import { join } from 'node:path'
 import process from 'node:process'
-import type { NextApiRequest, ContentTypeMapping } from '../types'
+import type { NextApiRequest, ContentTypeMapping, ContentfulWebhookResponse } from '../types'
+import { resolveDynamicAttributeToPathForContentful } from '../utils'
 
 /*
   This is a common question open for all CMS integrations.
@@ -13,30 +14,6 @@ import type { NextApiRequest, ContentTypeMapping } from '../types'
     - If no, the content will be in sync with the CMS/GUI. But get's updated on
       publish / delete / create etc..
 */
-type OperationType = 'Entry' | 'DeleteEntry'
-
-interface ContentfulWebhookResponse {
-  sys: {
-    /*
-      Entity id
-    */
-    id: string
-    type: OperationType
-    contentType: {
-      sys: {
-        type: 'Link'
-        linkType: 'ContentType'
-        id: string
-      }
-    }
-  }
-  fields: Record<
-    string,
-    {
-      'en-US': string
-    }
-  >
-}
 
 const ALLOWED_OPERATIONS: string[] = ['DeletedEntry', 'Entry']
 
@@ -81,11 +58,9 @@ const resolveDynamicAttribte = (
   if (routeData?.dynamicRouteAttribute === 'id') {
     return join(routeData.route, content.sys.id)
   }
-  const field = content.fields?.[routeData.dynamicRouteAttribute]
 
-  if (field['en-US']) {
-    return join(routeData.route, field['en-US'])
-  }
-
-  return join(routeData.route, Object.keys(field)[0])
+  return resolveDynamicAttributeToPathForContentful(
+    join(routeData.route, routeData.dynamicRouteAttribute),
+    content
+  )
 }

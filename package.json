@@ -47,6 +47,8 @@
   "scripts": {
     "lint": "eslint",
     "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
     "dev": "vite build --watch"
   },
   "husky": {
@@ -93,6 +95,7 @@
   },
   "dependencies": {
     "contentful-resolve-response": "^1.7.0",
-    "he": "^1.2.0"
+    "he": "^1.2.0",
+    "vitest": "^0.33.0"
   }
 }

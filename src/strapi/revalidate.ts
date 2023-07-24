@@ -1,6 +1,7 @@
 import type { NextApiRequest, ContentTypeMapping } from '../types'
 import process from 'node:process'
 import { join } from 'node:path'
+import { resolveDynamicAttributeToPath } from '../utils'
 
 type Entry = { id: string } & Record<string, unknown>
 
@@ -57,9 +58,8 @@ const resolveDynamicAttribte = (
     return routeData.route?.startsWith('/') ? routeData.route : `/${routeData.route}`
   }
 
-  const detailsPageSlug = entry[routeData.dynamicRouteAttribute]
-  const route = join(routeData.route, String(detailsPageSlug))
-  return route.startsWith('/') ? route : `/${route}`
+  const route = join(routeData.route, routeData.dynamicRouteAttribute)
+  return resolveDynamicAttributeToPath(route, entry)
 }
 
 const getModelFromContentType = (contentType: string): string | null => {
