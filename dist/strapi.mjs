@@ -37,7 +37,7 @@ const f = (a) => {
       ...a == null ? void 0 : a.meta,
       pagination: {
         ...(d = a == null ? void 0 : a.meta) == null ? void 0 : d.pagination,
-        pages: i
+        ...!!i && { pages: i }
       }
     },
     ...t(a)

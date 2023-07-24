@@ -90,7 +90,7 @@ export const normalize = (
       ...content?.meta,
       pagination: {
         ...content?.meta?.pagination,
-        pages,
+        ...(!!pages && { pages }),
       },
     },
     ...normalizeContent(content),
