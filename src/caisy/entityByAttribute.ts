@@ -5,7 +5,7 @@ export const getDataByAttribute = async (params: {
   query: string,
   attribute: string
 }) => {
-  const { projectId, query } = params
+  const { projectId, query, attribute } = params
 
   const url = `https://cloud.caisy.io/api/v3/e/${projectId}/graphql`;
 
@@ -24,7 +24,7 @@ export const getDataByAttribute = async (params: {
       query,
       variables: {
         // value: params['name']
-        value: params?.[`${attribute}`] || ''
+        value: params?.[`${attribute}`] ?? ''
       }
     }),
   })

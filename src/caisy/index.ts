@@ -5,10 +5,6 @@ export const getEntities = async (params) => {
   return getEntitiesData(params)
 }
 
-export const getEntyByAttribute = async (
-  projectId: string,
-  query: string,
-  attribute: string
-) => {
-  return getDataByAttribute({ projectId, query, attribute })
+export const getEntyByAttribute = async (params) => {
+  return getDataByAttribute(params)
 }
