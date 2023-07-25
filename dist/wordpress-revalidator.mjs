@@ -16,7 +16,7 @@ const p = ["post_update"], u = (o, e) => {
   if (!("dynamicRouteAttribute" in e))
     return e.route?.startsWith("/") ? e.route : `/${e.route}`;
   if (e.dynamicRouteAttribute === "id") {
-    const t = c(e.route, String(o.ID));
+    const t = c(e.route, "${" + String(o.ID) + "}");
     return t.startsWith("/") ? t : `/${t}`;
   }
 };

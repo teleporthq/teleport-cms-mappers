@@ -47,7 +47,7 @@ const resolveDynamicAttribte = (
   }
 
   if (routeData.dynamicRouteAttribute === 'id') {
-    const route = join(routeData.route, String(content.ID))
+    const route = join(routeData.route, '${' + String(content.ID) + '}')
     return route.startsWith('/') ? route : `/${route}`
   }
 }

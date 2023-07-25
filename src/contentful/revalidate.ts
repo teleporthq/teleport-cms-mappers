@@ -56,11 +56,11 @@ const resolveDynamicAttribte = (
   }
 
   if (routeData?.dynamicRouteAttribute === 'id') {
-    return join(routeData.route, content.sys.id)
+    return join(routeData.route, '${' + content.sys.id + '}')
   }
 
   return resolveDynamicAttributeToPathForContentful(
-    join(routeData.route, routeData.dynamicRouteAttribute),
+    join(routeData.route, '${' + routeData.dynamicRouteAttribute + '}'),
     content
   )
 }

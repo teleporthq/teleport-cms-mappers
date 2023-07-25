@@ -58,7 +58,7 @@ const resolveDynamicAttribte = (
     return routeData.route?.startsWith('/') ? routeData.route : `/${routeData.route}`
   }
 
-  const route = join(routeData.route, routeData.dynamicRouteAttribute)
+  const route = join(routeData.route, '${' + routeData.dynamicRouteAttribute + '}')
   return resolveDynamicAttributeToPath(route, entry)
 }
 

@@ -43,7 +43,7 @@ export const resolveDynamicAttributeToPathForContentful = (
 ): string => {
   return str.replace(/\$\{([^}]+)\}/g, (match, key) => {
     const keys = key.split('.').map((k) => k.replace(/\[(\d+)\]/g, '.$1').split('.'))
-    let value: any = data.fields
+    let value: any = { ...data.fields, ...data.sys } // Allow resolving placeholders directly from data.sys as well
 
     for (const keyArray of keys) {
       for (const k of keyArray) {
@@ -63,6 +63,11 @@ export const resolveDynamicAttributeToPathForContentful = (
     // Use the 'en-US' field if language is not provided or not found
     if (value && typeof value === 'object' && 'en-US' in value) {
       return value['en-US']
+    }
+
+    // If the value is a string, return it
+    if (typeof value === 'string') {
+      return value
     }
 
     return match

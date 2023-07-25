@@ -44,6 +44,32 @@ describe('resolves the route for contentful responses', () => {
       fields: {},
     })
 
-    console.log(result)
+    expect(result).toBe(`/slug/my-first-post`)
+  })
+
+  test('resolves the string expressions with more complex urls', () => {
+    const result = resolveDynamicAttributeToPathForContentful('/slug/${id}/user/${user.name}', {
+      sys: {
+        id: 'xyz789',
+        type: 'Entry',
+        contentType: {
+          sys: {
+            type: 'Link',
+            linkType: 'ContentType',
+            id: 'post',
+          },
+        },
+      },
+      fields: {
+        user: {
+          name: {
+            'en-US': 'John Doe',
+            'fr-FR': 'Jean Doe',
+          },
+        },
+      },
+    })
+
+    expect(result).toBe('/slug/xyz789/user/John Doe')
   })
 })

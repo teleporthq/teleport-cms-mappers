@@ -1,6 +1,6 @@
 import i from "node:process";
 import { join as l } from "node:path";
-import { a as u } from "./utils-142c7bf0.mjs";
+import { a as u } from "./utils-87947e30.mjs";
 const a = /api::([^.\s]+)/, p = [
   "etnry.create",
   "entry.publish",
@@ -23,7 +23,7 @@ const a = /api::([^.\s]+)/, p = [
 }, y = (t, e) => {
   if (!("dynamicRouteAttribute" in e))
     return e.route?.startsWith("/") ? e.route : `/${e.route}`;
-  const n = l(e.route, e.dynamicRouteAttribute);
+  const n = l(e.route, "${" + e.dynamicRouteAttribute + "}");
   return u(n, t);
 }, d = (t) => {
   const e = t.match(a);

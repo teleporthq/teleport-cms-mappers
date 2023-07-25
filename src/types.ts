@@ -31,12 +31,9 @@ export interface ContentfulWebhookResponse {
       }
     }
   }
-  fields: Record<
-    string,
-    {
-      'en-US': string
-    }
-  >
+  fields: {
+    [key: string]: { 'en-US': string } | { [key: string]: string }
+  }
 }
 
 export interface WordpressWebhookResponse {

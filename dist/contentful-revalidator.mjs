@@ -1,6 +1,6 @@
 import { join as s } from "node:path";
 import y from "node:process";
-import { r as u } from "./utils-142c7bf0.mjs";
+import { r as u } from "./utils-87947e30.mjs";
 const l = ["DeletedEntry", "Entry"], m = async (e, t) => {
   const n = [];
   if (y.env?.TELEPORTHQ_ISR_TOKEN !== e.query?.TELEPORTHQ_ISR_TOKEN)
@@ -13,8 +13,8 @@ const l = ["DeletedEntry", "Entry"], m = async (e, t) => {
       return o;
   }).map((o) => p(r, o));
   return n.push(...c), n;
-}, p = (e, t) => "dynamicRouteAttribute" in t ? t?.dynamicRouteAttribute === "id" ? s(t.route, e.sys.id) : u(
-  s(t.route, t.dynamicRouteAttribute),
+}, p = (e, t) => "dynamicRouteAttribute" in t ? t?.dynamicRouteAttribute === "id" ? s(t.route, "${" + e.sys.id + "}") : u(
+  s(t.route, "${" + t.dynamicRouteAttribute + "}"),
   e
 ) : t.route;
 export {
