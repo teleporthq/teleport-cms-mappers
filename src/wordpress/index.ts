@@ -61,7 +61,7 @@ export const normalize = async (
         ...(headers['x-wp-total'] && { total: parseInt(headers['x-wp-total']) }),
         ...(!!totalPages && { pages: totalPages }),
         hasNextPage: currentPage < totalPages,
-        hasPrevPage: currentPage > 0,
+        hasPrevPage: currentPage > 1,
         page: currentPage,
       },
     },

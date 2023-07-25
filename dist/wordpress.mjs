@@ -138,7 +138,7 @@ const I = (a) => {
         ...i["x-wp-total"] && { total: parseInt(i["x-wp-total"]) },
         ...!!D && { pages: D },
         hasNextPage: o < D,
-        hasPrevPage: o > 0,
+        hasPrevPage: o > 1,
         page: o
       }
     },
