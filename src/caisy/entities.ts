@@ -1,4 +1,4 @@
-import { mapResponse } from "./utils";
+import { mapListResponse } from "./utils";
 
 export const getEntitiesData = async (params: {
   projectId: string,
@@ -19,5 +19,5 @@ export const getEntitiesData = async (params: {
     }),
   })
 
-  return mapResponse(response)
+  return mapListResponse(response)
 }

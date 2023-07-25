@@ -1,5 +1,3 @@
-import { mapResponse } from "./utils";
-
 export const getDataByAttribute = async (params: {
   projectId: string,
   query: string,
@@ -23,7 +21,33 @@ export const getDataByAttribute = async (params: {
     }),
   })
 
-  return mapResponse(response)
+  if (response.status === 401 || response.status === 403) {
+    throw new Error(
+      `getDataByAttribute from caisy auth or permission issue: ${response.statusText}`
+    )
+  }
+  if (response.status !== 200) {
+    throw new Error(
+      `getDataByAttribute from caisy - internal error fetching entries from caisy: ${response.statusText}`
+    )
+  }
+
+  const json = await response.json();
+
+  if (json.errors) {
+    throw new Error(
+      `getDataByAttribute from caisy - internal error fetching entries from caisy: ${JSON.stringify(
+        json.errors
+      )}`
+    )
+  }
+
+  if (!json.data) {
+    return []
+  }
+
+  const nodeResponse = json.data[Object.keys(json.data)[0]]
+  return [nodeResponse]
 }
 
 

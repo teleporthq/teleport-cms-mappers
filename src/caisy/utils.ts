@@ -1,11 +1,11 @@
 
-export const mapResponse = async (response: Response) => {
-  if (response.status == 401 || response.status == 403) {
+export const mapListResponse = async (response: Response) => {
+  if (response.status === 401 || response.status === 403) {
     throw new Error(
       `getEntriesByContentType from caisy auth or permission issue: ${response.statusText}`
     );
   }
-  if (response.status != 200) {
+  if (response.status !== 200) {
     throw new Error(
       `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${response.statusText}`
     );
@@ -21,9 +21,13 @@ export const mapResponse = async (response: Response) => {
     );
   }
 
-  // get only the nodes from the response
-  const nodes = json.data[Object.keys(json.data)[0]].edges.map((e: any) => e.node);
-  return nodes
+  if (json.data) {
+    // get only the nodes from the response
+    const nodes = json.data[Object.keys(json.data)[0]].edges.map((e: any) => e.node)
+    return nodes
+  }
+
+  return []
 }
 
 export const normalize = (input) => {
