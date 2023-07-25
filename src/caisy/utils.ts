@@ -43,12 +43,76 @@ export const normalize = (input) => {
     return input.map((inputArr) => normalize(inputArr))
   }
 
-  if (input._meta) {
-    return {
-      ...input,
-      ...input._meta,
-    }
+  if (typeof input === 'object' && input.json && input.json.type === 'doc') {
+    return resolveRichTextLinkedAssets(input.json)
   }
 
-  return input
+  return Object.keys(input).reduce((acc, key) => {
+    if (Array.isArray(input[key])) {
+      acc[key] = input[key].map((item) => {
+        return normalize(item)
+      })
+
+      return acc
+    }
+
+    if (typeof input[key] === 'object') {
+      acc[key] = { ...normalize(input[key]) }
+
+      return acc
+    }
+
+    acc[key] = input[key]
+    return acc
+  }, {})
+}
+
+
+const resolveRichTextLinkedAssets = (richTextData: {
+  connections?: Record<string, unknown>[]
+  json:
+    | {
+        content: {
+          attrs: Record<string, unknown>
+          type: string
+        }[]
+        type: 'string'
+      }
+    | string
+}) => {
+  if (!richTextData.connections) {
+    return richTextData.json
+  }
+  if (!richTextData.json || typeof richTextData.json === 'string') {
+    return ''
+  }
+
+  //@ts-ignore
+  const resolvedContent = richTextData.json.content.map((node) => {
+    if (node.type !== 'documentLink') {
+      return node
+    }
+
+    if (!richTextData.connections) {
+      return node
+    }
+    // TODO: ? can I also have linked entries, to handle in v2
+    const linkedAssetAttrs = richTextData.connections.find(
+      (connection) => connection.id === node.attrs.documentId
+    )
+    if (linkedAssetAttrs) {
+      node.attrs = {
+        ...node.attrs,
+        src: linkedAssetAttrs.src,
+        title: linkedAssetAttrs.title,
+      }
+    }
+
+    return node
+  })
+
+  return {
+    content: resolvedContent,
+    type: richTextData.json.type,
+  }
 }

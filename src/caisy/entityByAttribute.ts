@@ -9,11 +9,6 @@ export const getDataByAttribute = async (params: {
 
   const url = `https://cloud.caisy.io/api/v3/e/${projectId}/graphql`;
 
-  // const variables = paramsVariables.reduce((acc: Record<string, string>, param) => {
-  //   acc[param] = params?.[`${param}`] || ''
-  //   return acc
-  // }, {})
-
   const response = await fetch(url, {
     method: "POST",
     headers: {

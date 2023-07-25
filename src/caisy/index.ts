@@ -1,10 +1,18 @@
 import { getEntitiesData } from "./entities";
 import { getDataByAttribute } from "./entityByAttribute";
+import { getEntitiesByPage } from "./entitiesByPage";
 
-export const getEntities = async (params) => {
-  return getEntitiesData(params)
+const getEntities = async (params) => {
+  return await getEntitiesData(params)
 }
 
-export const getEntyByAttribute = async (params) => {
-  return getDataByAttribute(params)
+const getEntyByAttribute = async (params) => {
+  return await getDataByAttribute(params)
 }
+
+const getEntitiesWithPagination = async (params) => {
+  return await getEntitiesByPage(params)
+}
+
+export default { getEntities, getEntyByAttribute, getEntitiesWithPagination }
+

@@ -3,6 +3,8 @@ import { mapResponse } from "./utils";
 export const getEntitiesByPage = async (params: {
   projectId: string,
   query: string,
+  page: number,
+  perPage: number,
 }) => {
   const { projectId, query } = params
   const url = `https://cloud.caisy.io/api/v3/e/${projectId}/graphql`;
@@ -16,8 +18,7 @@ export const getEntitiesByPage = async (params: {
     body: JSON.stringify({
       query,
       variables: {
-        first: 30,
-        // first: params['page'] * params['itemPerPage']
+        first: params['page'] * params['perPage']
       }
     }),
   })
@@ -56,8 +57,7 @@ export const getEntitiesByPage = async (params: {
     body: JSON.stringify({
       query,
       variables: {
-        first: 10,
-        // first: params[itemPerPage],
+        first: params['perPage'],
         after: endCursor
       }
     }),
