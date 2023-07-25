@@ -51,7 +51,7 @@ export const getEntitiesByPage = async (params: {
     return []
   }
 
-  const { endCursor = '' } = json.data[Object.keys(json.data)[0]]?.pageInfo
+  const { endCursor } = json.data[Object.keys(json.data)[0]].pageInfo
 
   const nextResponse = await fetch(url, {
     method: "POST",
@@ -63,7 +63,7 @@ export const getEntitiesByPage = async (params: {
       query,
       variables: {
         first: Number.parseInt(params?.['perPage']) ?? 10,
-        after: endCursor
+        after: endCursor ?? ''
       }
     }),
   })

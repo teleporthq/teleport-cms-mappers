@@ -1,97 +1,112 @@
-const i = async (t) => {
-  if (t.status == 401 || t.status == 403)
+const c = async (t) => {
+  if (t.status === 401 || t.status === 403)
     throw new Error(
       `getEntriesByContentType from caisy auth or permission issue: ${t.statusText}`
     );
-  if (t.status != 200)
+  if (t.status !== 200)
     throw new Error(
       `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${t.statusText}`
     );
-  const e = await t.json();
-  if (e.errors)
+  const r = await t.json();
+  if (r.errors)
     throw new Error(
       `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${JSON.stringify(
-        e.errors
+        r.errors
       )}`
     );
-  return e.data[Object.keys(e.data)[0]].edges.map((s) => s.node);
+  return r.data ? r.data[Object.keys(r.data)[0]].edges.map((s) => s.node) : [];
 }, u = async (t) => {
-  const { projectId: e, query: r } = t, s = `https://cloud.caisy.io/api/v3/e/${e}/graphql`, n = await fetch(s, {
+  const { projectId: r, query: o } = t, s = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, i = await fetch(s, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-caisy-token": process.env.CMS_ACCESS_TOKEN
     },
     body: JSON.stringify({
-      query: r
+      query: o
     })
   });
-  return i(n);
+  return c(i);
 }, f = async (t) => {
-  const { projectId: e, query: r, attribute: s } = t, n = `https://cloud.caisy.io/api/v3/e/${e}/graphql`, o = await fetch(n, {
+  const { projectId: r, query: o, attribute: s } = t, i = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, e = await fetch(i, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-caisy-token": process.env.CMS_ACCESS_TOKEN
     },
     body: JSON.stringify({
-      query: r,
+      query: o,
       variables: {
         value: (t == null ? void 0 : t[`${s}`]) ?? ""
       }
     })
   });
-  return i(o);
-}, p = async (t) => {
-  const { projectId: e, query: r } = t, s = `https://cloud.caisy.io/api/v3/e/${e}/graphql`, n = await fetch(s, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-caisy-token": process.env.CMS_ACCESS_TOKEN
-    },
-    body: JSON.stringify({
-      query: r,
-      variables: {
-        first: t.page * t.perPage
-      }
-    })
-  });
-  if (n.status == 401 || n.status == 403)
+  if (e.status === 401 || e.status === 403)
     throw new Error(
-      `getEntriesByContentType from caisy auth or permission issue: ${n.statusText}`
+      `getDataByAttribute from caisy auth or permission issue: ${e.statusText}`
     );
-  if (n.status != 200)
+  if (e.status !== 200)
     throw new Error(
-      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${n.statusText}`
+      `getDataByAttribute from caisy - internal error fetching entries from caisy: ${e.statusText}`
     );
-  const o = await n.json();
-  if (o.errors)
+  const n = await e.json();
+  if (n.errors)
     throw new Error(
-      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${JSON.stringify(
-        o.errors
+      `getDataByAttribute from caisy - internal error fetching entries from caisy: ${JSON.stringify(
+        n.errors
       )}`
     );
-  const { endCursor: a, hasNextPage: c } = o.data[Object.keys(o.data)[0]].pageInfo;
-  if (!c)
-    return {};
-  const y = await fetch(s, {
+  return n.data ? [n.data[Object.keys(n.data)[0]]] : [];
+}, g = async (t) => {
+  const { projectId: r, query: o } = t, s = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, i = Number.parseInt((t == null ? void 0 : t.page) ?? "1") * Number.parseInt((t == null ? void 0 : t.perPage) ?? "10"), e = await fetch(s, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-caisy-token": process.env.CMS_ACCESS_TOKEN
     },
     body: JSON.stringify({
-      query: r,
+      query: o,
       variables: {
-        first: t.perPage,
-        after: a
+        first: i,
+        after: ""
       }
     })
   });
-  return i(y);
-}, g = async (t) => await u(t), h = async (t) => await f(t), d = async (t) => await p(t);
+  if (e.status === 401 || e.status === 403)
+    throw new Error(
+      `getEntriesByContentType from caisy auth or permission issue: ${e.statusText}`
+    );
+  if (e.status !== 200)
+    throw new Error(
+      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${e.statusText}`
+    );
+  const n = await e.json();
+  if (n.errors)
+    throw new Error(
+      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${JSON.stringify(
+        n.errors
+      )}`
+    );
+  if (!n.data)
+    return [];
+  const { endCursor: a } = n.data[Object.keys(n.data)[0]].pageInfo, y = await fetch(s, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-caisy-token": process.env.CMS_ACCESS_TOKEN
+    },
+    body: JSON.stringify({
+      query: o,
+      variables: {
+        first: Number.parseInt(t == null ? void 0 : t.perPage) ?? 10,
+        after: a ?? ""
+      }
+    })
+  });
+  return c(y);
+}, h = async (t) => await u(t), d = async (t) => await f(t), p = async (t) => await g(t);
 export {
-  g as getEntities,
-  d as getEntitiesWithPagination,
-  h as getEntyByAttribute
+  h as getEntities,
+  p as getEntitiesWithPagination,
+  d as getEntyByAttribute
 };
