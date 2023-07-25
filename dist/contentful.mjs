@@ -247,7 +247,7 @@ const y = (e) => {
     ...e
   };
 }, $ = (e) => {
-  const r = e.limit + e.skip < e.total, n = e.skip > 0, t = "skip" in e && "limit" in e ? e.skip / e.limit : void 0;
+  const r = e.limit + e.skip < e.total, n = e.skip > 0, t = "skip" in e && "limit" in e ? e.skip / e.limit + 1 : void 0;
   return {
     meta: {
       pagination: {

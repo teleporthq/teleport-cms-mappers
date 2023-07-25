@@ -91,7 +91,7 @@ export const normalize = (
   }
 
   if (content?.meta?.pagination?.start && content?.meta?.pagination?.limit) {
-    page = content.meta.pagination.start / content.meta.pagination.limit
+    page = content.meta.pagination.start / content.meta.pagination.limit + 1
   }
 
   const hasNextPage =

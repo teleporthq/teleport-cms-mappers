@@ -84,7 +84,7 @@ export const normalize = (
   const hasNextPage = content.limit + content.skip < content.total
   const hasPrevPage = content.skip > 0
   const currentPage =
-    'skip' in content && 'limit' in content ? content.skip / content.limit : undefined
+    'skip' in content && 'limit' in content ? content.skip / content.limit + 1 : undefined
   return {
     meta: {
       pagination: {
