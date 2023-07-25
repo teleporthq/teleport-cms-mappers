@@ -87,7 +87,6 @@ const resolveRichTextLinkedAssets = (richTextData: {
     return ''
   }
 
-  //@ts-ignore
   const resolvedContent = richTextData.json.content.map((node) => {
     if (node.type !== 'documentLink') {
       return node

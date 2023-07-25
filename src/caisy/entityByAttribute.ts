@@ -18,7 +18,6 @@ export const getDataByAttribute = async (params: {
     body: JSON.stringify({
       query,
       variables: {
-        // value: params['name']
         value: params?.[`${attribute}`] ?? ''
       }
     }),
