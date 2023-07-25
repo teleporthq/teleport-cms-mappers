@@ -1,7 +1,4 @@
-declare const _default: {
-    getEntities: (params: any) => Promise<any>;
-    getEntyByAttribute: (params: any) => Promise<any>;
-    getEntitiesWithPagination: (params: any) => Promise<any>;
-};
-export default _default;
+export declare const getEntities: (params: any) => Promise<any>;
+export declare const getEntyByAttribute: (params: any) => Promise<any>;
+export declare const getEntitiesWithPagination: (params: any) => Promise<any>;
 //# sourceMappingURL=index.d.ts.map

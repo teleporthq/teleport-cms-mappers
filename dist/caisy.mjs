@@ -89,7 +89,9 @@ const i = async (t) => {
     })
   });
   return i(y);
-}, g = async (t) => await u(t), h = async (t) => await f(t), d = async (t) => await p(t), E = { getEntities: g, getEntyByAttribute: h, getEntitiesWithPagination: d };
+}, g = async (t) => await u(t), h = async (t) => await f(t), d = async (t) => await p(t);
 export {
-  E as default
+  g as getEntities,
+  d as getEntitiesWithPagination,
+  h as getEntyByAttribute
 };
