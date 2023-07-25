@@ -4,6 +4,7 @@ export declare const normalize: (content: any, requestParams: any) => Promise<{
         pagination?: {
             total?: number;
             pages?: number;
+            page?: number;
             hasNextPage?: boolean;
             hasPrevPage?: boolean;
         };

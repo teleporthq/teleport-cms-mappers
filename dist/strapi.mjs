@@ -1,53 +1,54 @@
-function P(a) {
+function t(a) {
   if (typeof a != "object" || a === null)
     return a;
   const i = {};
-  for (const l in a)
-    i[l] = P(a[l]);
+  for (const r in a)
+    i[r] = t(a[r]);
   return i;
 }
-const k = (a) => {
+const x = (a) => {
   const i = {};
-  for (const l in a) {
-    const r = a[l];
-    if (typeof r == "object" && r !== null && "data" in r && r.data !== null && "id" in r.data && "attributes" in r.data) {
-      const s = m(r);
-      i[l] = { id: r.data.id, ...s };
+  for (const r in a) {
+    const l = a[r];
+    if (typeof l == "object" && l !== null && "data" in l && l.data !== null && "id" in l.data && "attributes" in l.data) {
+      const m = s(l);
+      i[r] = { id: l.data.id, ...m };
     } else
-      i[l] = P(r);
+      i[r] = t(l);
   }
   return i;
-}, m = (a) => {
+}, s = (a) => {
   if (a == null || typeof a == "object" && !Object.keys(a).length)
     return null;
   if (Array.isArray(a))
     return {
-      data: a.map(v)
+      data: a.map(N)
     };
   let i = { ...a };
   return a.attributes && (i = {
     ...i,
-    ...k(a.attributes)
-  }, delete i.attributes), a.data && (i = m(a.data)), i;
-}, v = (a) => {
-  var s, e, d, g, f, u, t, p, y, b, h, z;
-  let i;
-  (e = (s = a == null ? void 0 : a.meta) == null ? void 0 : s.pagination) != null && e.total && ((g = (d = a == null ? void 0 : a.meta) == null ? void 0 : d.pagination) != null && g.limit) && (i = Math.ceil(a.meta.pagination.total / a.meta.pagination.limit));
-  const l = ((u = (f = a == null ? void 0 : a.meta) == null ? void 0 : f.pagination) == null ? void 0 : u.limit) + a.meta.pagination.start < ((p = (t = a == null ? void 0 : a.meta) == null ? void 0 : t.pagination) == null ? void 0 : p.total), r = ((h = (b = (y = a == null ? void 0 : a.meta) == null ? void 0 : y.pagination) == null ? void 0 : b.limit) == null ? void 0 : h.start) > 0;
+    ...x(a.attributes)
+  }, delete i.attributes), a.data && (i = s(a.data)), i;
+}, N = (a) => {
+  var g, d, f, p, e, u, y, b, h, z, P, k, v, A, O, j;
+  let i, r;
+  (d = (g = a == null ? void 0 : a.meta) == null ? void 0 : g.pagination) != null && d.total && ((p = (f = a == null ? void 0 : a.meta) == null ? void 0 : f.pagination) != null && p.limit) && (i = Math.ceil(a.meta.pagination.total / a.meta.pagination.limit)), (u = (e = a == null ? void 0 : a.meta) == null ? void 0 : e.pagination) != null && u.start && ((b = (y = a == null ? void 0 : a.meta) == null ? void 0 : y.pagination) != null && b.limit) && (r = a.meta.pagination.start / a.meta.pagination.limit);
+  const l = ((z = (h = a == null ? void 0 : a.meta) == null ? void 0 : h.pagination) == null ? void 0 : z.limit) + a.meta.pagination.start < ((k = (P = a == null ? void 0 : a.meta) == null ? void 0 : P.pagination) == null ? void 0 : k.total), m = ((O = (A = (v = a == null ? void 0 : a.meta) == null ? void 0 : v.pagination) == null ? void 0 : A.limit) == null ? void 0 : O.start) > 0;
   return {
     meta: {
       ...a == null ? void 0 : a.meta,
       pagination: {
-        ...(z = a == null ? void 0 : a.meta) == null ? void 0 : z.pagination,
+        ...(j = a == null ? void 0 : a.meta) == null ? void 0 : j.pagination,
         ...!!i && { pages: i },
+        ...!!r && { page: r },
         hasNextPage: l,
-        hasPrevPage: r
+        hasPrevPage: m
       }
     },
-    ...m(a)
+    ...s(a)
   };
 };
 export {
-  v as normalize,
-  m as normalizeContent
+  N as normalize,
+  s as normalizeContent
 };

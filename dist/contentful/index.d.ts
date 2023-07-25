@@ -5,6 +5,7 @@ export declare const normalize: (content: any) => {
             limit?: number;
             skip?: number;
             pages: number;
+            page: number;
             hasNextPage?: boolean;
             hasPrevPage?: boolean;
         };
