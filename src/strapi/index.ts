@@ -99,7 +99,7 @@ export const normalize = (
   }
 
   const hasNextPage = page < pages
-  const hasPrevPage = page > 1
+  const hasPrevPage = page >= 2
   return {
     meta: {
       ...content?.meta,

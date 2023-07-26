@@ -34,7 +34,7 @@ const z = (a) => {
   const i = (f = (d = a == null ? void 0 : a.meta) == null ? void 0 : d.pagination) == null ? void 0 : f.total, e = (u = (m = a == null ? void 0 : a.meta) == null ? void 0 : m.pagination) == null ? void 0 : u.limit, r = (g = (o = a == null ? void 0 : a.meta) == null ? void 0 : o.pagination) == null ? void 0 : g.start;
   let l = 0, s = 1;
   i && e && (l = Math.ceil(i / e)), r && e && (s = r / e + 1);
-  const p = s < l, h = s > 1;
+  const p = s < l, h = s >= 2;
   return {
     meta: {
       ...a == null ? void 0 : a.meta,

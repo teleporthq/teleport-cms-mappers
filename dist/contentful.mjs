@@ -249,7 +249,7 @@ const y = (e) => {
 }, $ = (e) => {
   let r = 0, n = 1;
   e.total && e.limit && (r = Math.ceil(e.total / e.limit)), e.skip && e.limit && (n = e.skip / e.limit + 1);
-  const t = n < r, f = n > 1;
+  const t = n < r, f = n >= 2;
   return {
     meta: {
       pagination: {
