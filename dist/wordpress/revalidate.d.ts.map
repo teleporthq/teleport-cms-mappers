@@ -1,1 +1,0 @@
-{"version":3,"file":"revalidate.d.ts","sourceRoot":"","sources":["../../../src/wordpress/revalidate.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,cAAc,EAAE,kBAAkB,EAAE,wBAAwB,EAAE,MAAM,UAAU,CAAA;AAE5F,UAAU,uBAAuB;IAC/B,mBAAmB,EAAE,MAAM,CAAA;CAC5B;AAID,eAAO,MAAM,UAAU,YACZ,eAAe,wBAAwB,EAAE,uBAAuB,CAAC,gBAC5D,OAAO,MAAM,EAAE,kBAAkB,CAAC,KAC/C,MAAM,EA0BR,CAAA"}

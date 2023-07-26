@@ -1,25 +1,20 @@
-import { join as c } from "node:path";
-const p = ["post_update"], u = (o, e) => {
-  const t = o.headers, n = [];
-  if (console.log(`[ON-DEMAND_ISR]: Received a request ${t["x-wp-webhook-name"]}`), process.env?.TELEPORTHQ_ISR_TOKEN !== o.query?.TELEPORTHQ_ISR_TOKEN)
-    return n;
-  if (p.includes(t["x-wp-webhook-name"]) === !1)
-    return console.log(
-      `[ON-DEMAND_ISR]: Received an event that is not allowed: ${t["x-wp-webhook-name"]}`
-    ), n;
-  const r = o.body, i = Object.values(e).filter((s) => {
-    if (s.contentType === r.post.post_type)
-      return s;
-  }).map((s) => a(r.post, s));
-  return n.push(...i), n;
-}, a = (o, e) => {
-  if (!("dynamicRouteAttribute" in e))
-    return e.route?.startsWith("/") ? e.route : `/${e.route}`;
-  if (e.dynamicRouteAttribute === "id") {
-    const t = c(e.route, "${" + String(o.ID) + "}");
-    return t.startsWith("/") ? t : `/${t}`;
+const r = ["post_update"], d = async (o, t) => {
+  const e = o.headers;
+  if (console.log(`[ON-DEMAND_ISR]: Received a request ${e["x-wp-webhook-name"]}`), r.includes(e["x-wp-webhook-name"]) === !1) {
+    console.log(
+      `[ON-DEMAND_ISR]: Received an event that is not allowed: ${e["x-wp-webhook-name"]}`
+    );
+    return;
   }
-};
+  const n = o.body, s = n.post.post_type, c = {
+    id: n.post_id,
+    ...a(n.post)
+  };
+  t(c, s);
+}, a = (o) => Object.keys(o).reduce((t, e) => {
+  const n = e.replace(/^post_/, ""), s = o[e];
+  return typeof s == "object" ? (t[n] = a(s), t) : (t[n] = o[e], t);
+}, {});
 export {
-  u as revalidate
+  d as revalidate
 };

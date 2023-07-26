@@ -95,7 +95,6 @@
   },
   "dependencies": {
     "contentful-resolve-response": "^1.7.0",
-    "he": "^1.2.0",
-    "vitest": "^0.33.0"
+    "he": "^1.2.0"
   }
 }

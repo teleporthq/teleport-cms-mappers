@@ -1,1 +1,0 @@
-{"version":3,"file":"revalidate.d.ts","sourceRoot":"","sources":["../../../src/contentful/revalidate.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,cAAc,EAAE,kBAAkB,EAAE,yBAAyB,EAAE,MAAM,UAAU,CAAA;AAiB7F,eAAO,MAAM,UAAU,YACZ,eAAe,yBAAyB,EAAE,OAAO,CAAC,gBAC7C,OAAO,MAAM,EAAE,kBAAkB,CAAC,KAC/C,QAAQ,MAAM,EAAE,CAyBlB,CAAA"}

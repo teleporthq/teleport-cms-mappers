@@ -4,16 +4,7 @@ import dts from 'vite-plugin-dts'
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      'node:process': "process",
-      'node:path': "path"
-    }
-  },
   build: {
-    rollupOptions: {
-       external: ["node:path", "node:process"],
-    },
     emptyOutDir: true,
     outDir: "dist",
     target: "esnext",

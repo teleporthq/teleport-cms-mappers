@@ -1,53 +1,61 @@
-import { join } from 'node:path'
-import type { NextApiRequest, ContentTypeMapping, WordpressWebhookResponse } from '../types'
+import type { WebHookHandler } from '../types'
 
 interface WordpressWebhookHeaders {
   'x-wp-webhook-name': string
 }
 
+interface WordpressWebhookResponse {
+  post_id: number
+  post: {
+    /* post_type refers to the slug that wordpress used to identify the content type.
+      TODO: @JK-@Ionut Test it on more complex contentType names from the GUI.
+      The GUI uses rest_base for loading data and entiries. Since wp-webhooks is a 3rd party
+      plugin we don't have much control on what filed it used to change it use rest_base.
+    */
+    post_type: string
+  } & Record<string, unknown>
+}
+
 const ALLOWED_OPERATIONS: string[] = ['post_update']
 
-export const revalidate = (
-  request: NextApiRequest<WordpressWebhookResponse, WordpressWebhookHeaders>,
-  routeMappers: Record<string, ContentTypeMapping>
-): string[] => {
+export const revalidate: WebHookHandler<WordpressWebhookResponse, WordpressWebhookHeaders> = async (
+  request,
+  cb
+) => {
   const headers = request.headers
-  const pathsToRevalidate: string[] = []
   console.log(`[ON-DEMAND_ISR]: Received a request ${headers['x-wp-webhook-name']}`)
-  if (process.env?.TELEPORTHQ_ISR_TOKEN !== request.query?.['TELEPORTHQ_ISR_TOKEN']) {
-    return pathsToRevalidate
-  }
+  // if (process.env?.TELEPORTHQ_ISR_TOKEN !== request.query?.['TELEPORTHQ_ISR_TOKEN']) {
+  //   return
+  // }
 
   if (ALLOWED_OPERATIONS.includes(headers['x-wp-webhook-name']) === false) {
     console.log(
       `[ON-DEMAND_ISR]: Received an event that is not allowed: ${headers['x-wp-webhook-name']}`
     )
-    return pathsToRevalidate
+    return
   }
 
   const content = request.body
-  const paths = Object.values(routeMappers)
-    .filter((item) => {
-      if (item.contentType === content.post.post_type) {
-        return item
-      }
-    })
-    .map((item) => resolveDynamicAttribte(content.post, item))
+  const contentType = content.post.post_type
+  const data = {
+    id: content.post_id,
+    ...transformObject(content.post),
+  }
 
-  pathsToRevalidate.push(...paths)
-  return pathsToRevalidate
+  cb(data, contentType)
 }
 
-const resolveDynamicAttribte = (
-  content: WordpressWebhookResponse['post'],
-  routeData: ContentTypeMapping
-): string | undefined => {
-  if ('dynamicRouteAttribute' in routeData === false) {
-    return routeData.route?.startsWith('/') ? routeData.route : `/${routeData.route}`
-  }
+const transformObject = (input: Record<string, unknown>) => {
+  return Object.keys(input).reduce((acc: Record<string, unknown>, key) => {
+    const newKey = key.replace(/^post_/, '')
+    const value = input[key]
 
-  if (routeData.dynamicRouteAttribute === 'id') {
-    const route = join(routeData.route, '${' + String(content.ID) + '}')
-    return route.startsWith('/') ? route : `/${route}`
-  }
+    if (typeof value === 'object') {
+      acc[newKey] = transformObject(value as Record<string, unknown>)
+      return acc
+    }
+
+    acc[newKey] = input[key]
+    return acc
+  }, {})
 }

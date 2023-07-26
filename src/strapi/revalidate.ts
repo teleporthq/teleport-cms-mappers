@@ -1,68 +1,29 @@
-import type { NextApiRequest, ContentTypeMapping } from '../types'
-import process from 'node:process'
-import { join } from 'node:path'
-import { resolveDynamicAttributeToPath } from '../utils'
-
-type Entry = { id: string } & Record<string, unknown>
+import type { WebHookHandler, OutputObject } from '../types'
 
 interface StrapiWebhookResponse {
   event: (typeof ALLOWED_OPERATIONS)[number]
   model: string
-  entry: Entry
+  uid: string
+  entry: OutputObject
 }
 
-const regexPattern = /api::([^.\s]+)/
+/*
+  Strapi adda a `publishedAt` for each entry. So, we just need to handle the entry.update.
+  As, the field get's updated for every entry.publush/entry.unpublish too.
+*/
 
-const ALLOWED_OPERATIONS: string[] = [
-  'etnry.create',
-  'entry.publish',
-  'entry.unpublish',
-  'entry.update',
-  'entry.delete',
-]
+const ALLOWED_OPERATIONS: string[] = ['etnry.create', 'entry.update', 'entry.delete']
 
-export const revalidate = async (
-  request: NextApiRequest<StrapiWebhookResponse, unknown>,
-  routeMappers: Record<string, ContentTypeMapping>
-): Promise<string[]> => {
-  const pathsToRevalidate: string[] = []
-  console.log(`[ON-DEMAND_ISR]: Received a request`)
+export const revalidate: WebHookHandler<StrapiWebhookResponse, unknown> = async (request, cb) => {
   if (process.env?.TELEPORTHQ_ISR_TOKEN !== request.query?.['TELEPORTHQ_ISR_TOKEN']) {
-    return pathsToRevalidate
+    return
   }
 
   const content = request.body
   if (ALLOWED_OPERATIONS.includes(content.event) === false) {
     console.log(`[ON-DEMAND_ISR]: Received an event that is not allowed: ${content.event}`)
-    return pathsToRevalidate
+    return
   }
 
-  const paths = Object.values(routeMappers)
-    .filter((item) => {
-      const model = getModelFromContentType(item.contentType)
-      if (model && item.contentType === model) {
-        return item
-      }
-    })
-    .map((item) => resolveDynamicAttribte(content.entry, item))
-
-  pathsToRevalidate.push(...paths)
-  return pathsToRevalidate.filter(Boolean)
-}
-
-const resolveDynamicAttribte = (
-  entry: StrapiWebhookResponse['entry'],
-  routeData: ContentTypeMapping
-): string | undefined => {
-  if ('dynamicRouteAttribute' in routeData === false) {
-    return routeData.route?.startsWith('/') ? routeData.route : `/${routeData.route}`
-  }
-
-  const route = join(routeData.route, '${' + routeData.dynamicRouteAttribute + '}')
-  return resolveDynamicAttributeToPath(route, entry)
-}
-
-const getModelFromContentType = (contentType: string): string | null => {
-  const match = contentType.match(regexPattern)
-  return match ? match[1] : null
+  cb(content.entry, content.uid)
 }

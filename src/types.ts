@@ -9,44 +9,17 @@ export interface NextApiRequest<T, K> extends IncomingMessage {
   body: T
 }
 
-export interface ContentTypeMapping {
-  contentType: string
-  route: string
-  type: 'details' | 'list'
-  dynamicRouteAttribute?: string
-}
+export type CMS_ITEM_VALUE = string | number | boolean
 
-export interface ContentfulWebhookResponse {
-  sys: {
-    /*
-      Entity id
-    */
-    id: string
-    type: string
-    contentType: {
-      sys: {
-        type: 'Link'
-        linkType: 'ContentType'
-        id: string
-      }
-    }
-  }
-  fields: {
-    [key: string]: { 'en-US': string } | { [key: string]: string }
+export interface InputObject {
+  [key: string]: {
+    [key: string]: unknown
   }
 }
 
-export interface WordpressWebhookResponse {
-  post_id: number
-  post: {
-    ID: number
-    post_author: string
-    post_status: string
-    /* post_type refers to the slug that wordpress used to identify the content type.
-      TODO: @JK-@Ionut Test it on more complex contentType names from the GUI.
-      The GUI uses rest_base for loading data and entiries. Since wp-webhooks is a 3rd party
-      plugin we don't have much control on what filed it used to change it use rest_base.
-    */
-    post_type: string
-  }
-}
+export type OutputObject = Record<string, CMS_ITEM_VALUE | Record<string, CMS_ITEM_VALUE>>
+
+export type WebHookHandler<T, K> = (
+  request: NextApiRequest<T, K>,
+  cb: (normalizedObject: OutputObject, contentType: string) => string
+) => Promise<void>
