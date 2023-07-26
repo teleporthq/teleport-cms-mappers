@@ -5,10 +5,10 @@ export declare const normalize: (content: any) => {
             total?: number;
             limit?: number;
             start?: number;
-            pages?: number;
-            page?: number;
-            hasNextPage?: boolean;
-            hasPrevPage?: boolean;
+            pages: number;
+            page: number;
+            hasNextPage: boolean;
+            hasPrevPage: boolean;
         };
     };
     data: Array<unknown> | unknown;

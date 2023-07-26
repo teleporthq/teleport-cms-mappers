@@ -76,28 +76,30 @@ export const normalize = (
       total?: number
       limit?: number
       start?: number
-      pages?: number
-      page?: number
-      hasNextPage?: boolean
-      hasPrevPage?: boolean
+      pages: number
+      page: number
+      hasNextPage: boolean
+      hasPrevPage: boolean
     }
   }
   data: Array<unknown> | unknown
 } => {
-  let pages
-  let page
-  if (content?.meta?.pagination?.total && content?.meta?.pagination?.limit) {
-    pages = Math.ceil(content.meta.pagination.total / content.meta.pagination.limit)
+  const total = content?.meta?.pagination?.total
+  const limit = content?.meta?.pagination?.limit
+  const start = content?.meta?.pagination?.start
+
+  let pages = 0
+  let page = 1
+  if (total && limit) {
+    pages = Math.ceil(total / limit)
   }
 
-  if (content?.meta?.pagination?.start && content?.meta?.pagination?.limit) {
-    page = content.meta.pagination.start / content.meta.pagination.limit + 1
+  if (start && limit) {
+    page = start / limit + 1
   }
 
-  const hasNextPage =
-    content?.meta?.pagination?.limit + content.meta.pagination.start <
-    content?.meta?.pagination?.total
-  const hasPrevPage = content?.meta?.pagination?.limit?.start > 0
+  const hasNextPage = page < pages
+  const hasPrevPage = page > 1
   return {
     meta: {
       ...content?.meta,

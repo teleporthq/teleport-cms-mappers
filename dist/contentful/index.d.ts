@@ -6,8 +6,8 @@ export declare const normalize: (content: any) => {
             skip?: number;
             pages: number;
             page: number;
-            hasNextPage?: boolean;
-            hasPrevPage?: boolean;
+            hasNextPage: boolean;
+            hasPrevPage: boolean;
         };
     };
     data: Array<unknown> | unknown;

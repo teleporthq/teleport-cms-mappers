@@ -38,10 +38,10 @@ export const normalize = async (
   meta: {
     pagination?: {
       total?: number
-      pages?: number
-      page?: number
-      hasNextPage?: boolean
-      hasPrevPage?: boolean
+      pages: number
+      page: number
+      hasNextPage: boolean
+      hasPrevPage: boolean
     }
   }
   data: Array<unknown> | unknown
@@ -54,12 +54,16 @@ export const normalize = async (
     currentPage = 1
   }
 
-  const totalPages = parseInt(headers['x-wp-totalpages'])
+  let totalPages = parseInt(headers['x-wp-totalpages'])
+  if (!totalPages || isNaN(totalPages)) {
+    totalPages = 0
+  }
+
   return {
     meta: {
       pagination: {
         ...(headers['x-wp-total'] && { total: parseInt(headers['x-wp-total']) }),
-        ...(!!totalPages && { pages: totalPages }),
+        pages: totalPages,
         hasNextPage: currentPage < totalPages,
         hasPrevPage: currentPage > 1,
         page: currentPage,

@@ -3,10 +3,10 @@ export declare const normalize: (content: any, requestParams: any) => Promise<{
     meta: {
         pagination?: {
             total?: number;
-            pages?: number;
-            page?: number;
-            hasNextPage?: boolean;
-            hasPrevPage?: boolean;
+            pages: number;
+            page: number;
+            hasNextPage: boolean;
+            hasPrevPage: boolean;
         };
     };
     data: Array<unknown> | unknown;

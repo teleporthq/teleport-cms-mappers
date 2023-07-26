@@ -37,17 +37,17 @@ var L = Function.prototype.toString, m = Object.create, E = Object.definePropert
 }, z = function(e, r, n, t) {
   var f = P(e, r);
   t.set(e, f);
-  for (var o in e)
-    B.call(e, o) && (f[o] = n(e[o], t));
+  for (var s in e)
+    B.call(e, s) && (f[s] = n(e[s], t));
   if (_)
-    for (var i = k(e), s = 0, l = i.length, a = void 0; s < l; ++s)
-      a = i[s], R.call(e, a) && (f[a] = n(e[a], t));
+    for (var i = k(e), o = 0, l = i.length, a = void 0; o < l; ++o)
+      a = i[o], R.call(e, a) && (f[a] = n(e[a], t));
   return f;
 }, b = function(e, r, n, t) {
   var f = P(e, r);
   t.set(e, f);
-  for (var o = _ ? w(e).concat(k(e)) : w(e), i = 0, s = o.length, l = void 0, a = void 0; i < s; ++i)
-    if (l = o[i], l !== "callee" && l !== "caller")
+  for (var s = _ ? w(e).concat(k(e)) : w(e), i = 0, o = s.length, l = void 0, a = void 0; i < o; ++i)
+    if (l = s[i], l !== "callee" && l !== "caller")
       if (a = M(e, l), a) {
         !a.get && !a.set && (a.value = n(e[l], t));
         try {
@@ -65,21 +65,21 @@ var L = Function.prototype.toString, m = Object.create, E = Object.definePropert
   return typeof globalThis < "u" ? globalThis : typeof self < "u" ? self : typeof window < "u" ? window : typeof global < "u" ? global : (console && console.error && console.error('Unable to locate global object, returning "this".'), this);
 }();
 function O(e, r) {
-  var n = !!(r && r.isStrict), t = r && r.realm || N, f = n ? b : z, o = function(i, s) {
+  var n = !!(r && r.isStrict), t = r && r.realm || N, f = n ? b : z, s = function(i, o) {
     if (!i || typeof i != "object")
       return i;
-    if (s.has(i))
-      return s.get(i);
+    if (o.has(i))
+      return o.get(i);
     var l = i.__proto__ || F(i), a = l && l.constructor;
     if (!a || a === t.Object)
-      return f(i, t, o, s);
+      return f(i, t, s, o);
     var u;
     if (W(i)) {
       if (n)
-        return b(i, t, o, s);
-      u = new a(), s.set(i, u);
+        return b(i, t, s, o);
+      u = new a(), o.set(i, u);
       for (var c = 0, v = i.length; c < v; ++c)
-        u[c] = o(i[c], s);
+        u[c] = s(i[c], o);
       return u;
     }
     if (i instanceof t.Date)
@@ -87,32 +87,32 @@ function O(e, r) {
     if (i instanceof t.RegExp)
       return u = new a(i.source, i.flags || U(i)), u.lastIndex = i.lastIndex, u;
     if (t.Map && i instanceof t.Map)
-      return u = new a(), s.set(i, u), i.forEach(function(d, I) {
-        u.set(I, o(d, s));
+      return u = new a(), o.set(i, u), i.forEach(function(d, I) {
+        u.set(I, s(d, o));
       }), u;
     if (t.Set && i instanceof t.Set)
-      return u = new a(), s.set(i, u), i.forEach(function(d) {
-        u.add(o(d, s));
+      return u = new a(), o.set(i, u), i.forEach(function(d) {
+        u.add(s(d, o));
       }), u;
     if (t.Blob && i instanceof t.Blob)
       return i.slice(0, i.size, i.type);
     if (t.Buffer && t.Buffer.isBuffer(i))
-      return u = t.Buffer.allocUnsafe ? t.Buffer.allocUnsafe(i.length) : new a(i.length), s.set(i, u), i.copy(u), u;
+      return u = t.Buffer.allocUnsafe ? t.Buffer.allocUnsafe(i.length) : new a(i.length), o.set(i, u), i.copy(u), u;
     if (t.ArrayBuffer) {
       if (t.ArrayBuffer.isView(i))
-        return u = new a(i.buffer.slice(0)), s.set(i, u), u;
+        return u = new a(i.buffer.slice(0)), o.set(i, u), u;
       if (i instanceof t.ArrayBuffer)
-        return u = i.slice(0), s.set(i, u), u;
+        return u = i.slice(0), o.set(i, u), u;
     }
     return (
       // promise-like
       typeof i.then == "function" || // errors
       i instanceof Error || // weakmaps
       t.WeakMap && i instanceof t.WeakMap || // weaksets
-      t.WeakSet && i instanceof t.WeakSet ? i : f(i, t, o, s)
+      t.WeakSet && i instanceof t.WeakSet ? i : f(i, t, s, o)
     );
   };
-  return o(e, j());
+  return s(e, j());
 }
 O.default = O;
 O.strict = function(r, n) {
@@ -127,17 +127,17 @@ var K = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? func
   return e && typeof Symbol == "function" && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
 }, D = function() {
   function e(r, n) {
-    var t = [], f = !0, o = !1, i = void 0;
+    var t = [], f = !0, s = !1, i = void 0;
     try {
-      for (var s = r[Symbol.iterator](), l; !(f = (l = s.next()).done) && (t.push(l.value), !(n && t.length === n)); f = !0)
+      for (var o = r[Symbol.iterator](), l; !(f = (l = o.next()).done) && (t.push(l.value), !(n && t.length === n)); f = !0)
         ;
     } catch (a) {
-      o = !0, i = a;
+      s = !0, i = a;
     } finally {
       try {
-        !f && s.return && s.return();
+        !f && o.return && o.return();
       } finally {
-        if (o)
+        if (s)
           throw i;
       }
     }
@@ -166,21 +166,21 @@ var p = {}, V = function(r) {
 }, G = function(r) {
   return r.space ? [r.type + "!" + r.id, r.space.sys.id + "!" + r.type + "!" + r.id] : [r.type + "!" + r.id];
 }, A = function(r, n) {
-  var t = n.entryId, f = n.linkType, o = n.spaceId;
-  return o ? r.get(o + "!" + f + "!" + t) : r.get(f + "!" + t);
+  var t = n.entryId, f = n.linkType, s = n.spaceId;
+  return s ? r.get(s + "!" + f + "!" + t) : r.get(f + "!" + t);
 }, H = function(r, n) {
-  var t = n.sys, f = t.type, o = t.linkType;
+  var t = n.sys, f = t.type, s = t.linkType;
   if (f === "ResourceLink") {
-    var i = n.sys.urn, s = /.*:spaces\/([A-Za-z0-9]*)\/entries\/([A-Za-z0-9]*)/;
-    if (!s.test(i))
+    var i = n.sys.urn, o = /.*:spaces\/([A-Za-z0-9]*)\/entries\/([A-Za-z0-9]*)/;
+    if (!o.test(i))
       return p;
-    var l = i.match(s), a = D(l, 3);
+    var l = i.match(o), a = D(l, 3);
     a[0];
-    var u = a[1], c = a[2], v = o.split(":")[1];
+    var u = a[1], c = a[2], v = s.split(":")[1];
     return A(r, { linkType: v, entryId: c, spaceId: u }) || p;
   }
   var d = n.sys.id;
-  return A(r, { linkType: o, entryId: d }) || p;
+  return A(r, { linkType: s, entryId: d }) || p;
 }, Y = function(r) {
   if (Array.isArray(r))
     return r.filter(function(t) {
@@ -193,8 +193,8 @@ var p = {}, V = function(r) {
   if (n(r))
     return t(r);
   if (r && (typeof r > "u" ? "undefined" : K(r)) === "object") {
-    for (var o in r)
-      r.hasOwnProperty(o) && (r[o] = e(r[o], n, t, f));
+    for (var s in r)
+      r.hasOwnProperty(s) && (r[s] = e(r[s], n, t, f));
     f && (r = Y(r));
   }
   return r;
@@ -207,25 +207,25 @@ var p = {}, V = function(r) {
   var t = Object.keys(r).filter(function(f) {
     return n.indexOf(f) !== -1;
   });
-  return t.reduce(function(f, o) {
-    return f[o] = r[o], f;
+  return t.reduce(function(f, s) {
+    return f[s] = r[s], f;
   }, {});
 }, X = function(r, n) {
   if (n = n || {}, !r.items)
     return [];
-  var t = O(r), f = Object.keys(t.includes || {}).reduce(function(s, l) {
-    return [].concat(g(s), g(r.includes[l]));
-  }, []), o = [].concat(g(t.items), g(f)).filter(function(s) {
-    return !!s.sys;
-  }), i = new Map(o.reduce(function(s, l) {
+  var t = O(r), f = Object.keys(t.includes || {}).reduce(function(o, l) {
+    return [].concat(g(o), g(r.includes[l]));
+  }, []), s = [].concat(g(t.items), g(f)).filter(function(o) {
+    return !!o.sys;
+  }), i = new Map(s.reduce(function(o, l) {
     var a = G(l.sys).map(function(u) {
       return [u, l];
     });
-    return s.push.apply(s, g(a)), s;
+    return o.push.apply(o, g(a)), o;
   }, []));
-  return o.forEach(function(s) {
-    var l = Q(s, n.itemEntryPoints);
-    Object.assign(s, q(l, function(a) {
+  return s.forEach(function(o) {
+    var l = Q(o, n.itemEntryPoints);
+    Object.assign(o, q(l, function(a) {
       return V(a) || Z(a);
     }, function(a) {
       return J(i, a, n.removeUnresolved);
@@ -234,7 +234,7 @@ var p = {}, V = function(r) {
 };
 const y = (e) => {
   var r, n;
-  return Array.isArray(e) ? e.map((t) => y(t)) : typeof e != "object" ? e : (r = Object.keys(e.fields || {})) != null && r.length && ((n = Object.keys(e.sys || {})) != null && n.length) ? h(e) : Object.keys(e).reduce((t, f) => Array.isArray(e[f]) ? (t[f] = e[f].map((o) => y(o)), t) : typeof e[f] == "object" ? (t[f] = { ...h(e[f]) }, t) : (t[f] = e[f], t), {});
+  return Array.isArray(e) ? e.map((t) => y(t)) : typeof e != "object" ? e : (r = Object.keys(e.fields || {})) != null && r.length && ((n = Object.keys(e.sys || {})) != null && n.length) ? h(e) : Object.keys(e).reduce((t, f) => Array.isArray(e[f]) ? (t[f] = e[f].map((s) => y(s)), t) : typeof e[f] == "object" ? (t[f] = { ...h(e[f]) }, t) : (t[f] = e[f], t), {});
 }, h = (e) => {
   let r = {}, n = {}, t = {};
   return e.fields && (r = y(e.fields), r.file && (t = {
@@ -247,17 +247,19 @@ const y = (e) => {
     ...e
   };
 }, $ = (e) => {
-  const r = e.limit + e.skip < e.total, n = e.skip > 0, t = "skip" in e && "limit" in e ? e.skip / e.limit + 1 : void 0;
+  let r = 0, n = 1;
+  e.total && e.limit && (r = Math.ceil(e.total / e.limit)), e.skip && e.limit && (n = e.skip / e.limit + 1);
+  const t = n < r, f = n > 1;
   return {
     meta: {
       pagination: {
         ..."limit" in e && { limit: e.limit },
         ..."total" in e && { total: e.total },
         ..."skip" in e && { skip: e.skip },
-        ..."limit" in e && "total" in e && { pages: Math.ceil(e.total / e.limit) },
-        hasNextPage: r,
-        hasPrevPage: n,
-        ...!!t && { page: t }
+        hasNextPage: t,
+        hasPrevPage: f,
+        page: n,
+        pages: r
       }
     },
     data: X(y(e))
