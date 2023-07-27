@@ -76,12 +76,41 @@ export const normalize = (
       total?: number
       limit?: number
       start?: number
+      pages: number
+      page: number
+      hasNextPage: boolean
+      hasPrevPage: boolean
     }
   }
   data: Array<unknown> | unknown
 } => {
+  const total = content?.meta?.pagination?.total
+  const limit = content?.meta?.pagination?.limit
+  const start = content?.meta?.pagination?.start
+
+  let pages = 0
+  let page = 1
+  if (total && limit) {
+    pages = Math.ceil(total / limit)
+  }
+
+  if (start && limit) {
+    page = start / limit + 1
+  }
+
+  const hasNextPage = page < pages
+  const hasPrevPage = page >= 2
   return {
-    meta: content?.meta || {},
+    meta: {
+      ...content?.meta,
+      pagination: {
+        ...content?.meta?.pagination,
+        ...(!!pages && { pages }),
+        ...(!!page && { page }),
+        hasNextPage,
+        hasPrevPage,
+      },
+    },
     ...normalizeContent(content),
   }
 }
