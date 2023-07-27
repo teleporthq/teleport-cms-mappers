@@ -24,10 +24,6 @@ export const revalidate: WebHookHandler<ContentfulWebhookResponse, unknown> = as
   request,
   cb
 ) => {
-  if (process.env?.TELEPORTHQ_ISR_TOKEN !== request.query?.['TELEPORTHQ_ISR_TOKEN']) {
-    return
-  }
-
   const content = request.body
   const contentType = content.sys?.contentType?.sys?.id
 

@@ -15,11 +15,8 @@ interface StrapiWebhookResponse {
 const ALLOWED_OPERATIONS: string[] = ['etnry.create', 'entry.update', 'entry.delete']
 
 export const revalidate: WebHookHandler<StrapiWebhookResponse, unknown> = async (request, cb) => {
-  if (process.env?.TELEPORTHQ_ISR_TOKEN !== request.query?.['TELEPORTHQ_ISR_TOKEN']) {
-    return
-  }
-
   const content = request.body
+
   if (ALLOWED_OPERATIONS.includes(content.event) === false) {
     console.log(`[ON-DEMAND_ISR]: Received an event that is not allowed: ${content.event}`)
     return
