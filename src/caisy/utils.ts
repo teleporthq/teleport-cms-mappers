@@ -9,7 +9,8 @@ export const normalize = (input): {
   },
   data: Array<unknown> | unknown
 } => {
-  let currentPage = parseInt(input.page)
+  let currentPage = input.page ? parseInt(input.page) : 1
+
   if (!currentPage || isNaN(currentPage)) {
     currentPage = 1
   }
@@ -32,7 +33,7 @@ export const normalize = (input): {
   }
 }
 
-export const normalizeContent = (input) => {
+export const normalizeContent = (input: any[]) => {
   if (Array.isArray(input) && !input.length) {
     return []
   }
@@ -55,7 +56,7 @@ export const normalizeContent = (input) => {
 
   return Object.keys(input).reduce((acc, key) => {
     if (Array.isArray(input[key])) {
-      acc[key] = input[key].map((item) => {
+      acc[key] = input[key].map((item: any[]) => {
         return normalizeContent(item)
       })
 

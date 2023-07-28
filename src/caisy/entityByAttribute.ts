@@ -48,5 +48,10 @@ export const getDataByAttribute = async (params: {
   }
 
   const nodeResponse = json.data[Object.keys(json.data)[0]]
-  return normalizeContent([nodeResponse])
+  return {
+    meta: {
+      pagination: {}
+    },
+    data: [normalizeContent(nodeResponse)]
+  }
 }

@@ -1,8 +1,8 @@
 const g = (t) => {
-  var s, i;
-  let r = parseInt(t.page);
+  var s, a;
+  let r = t.page ? parseInt(t.page) : 1;
   (!r || isNaN(r)) && (r = 1);
-  const e = ((s = t.pageInfo) == null ? void 0 : s.hasNextPage) ?? !1, o = ((i = t.pageInfo) == null ? void 0 : i.hasPreviousPage) ?? !1, n = t.edges.map((a) => a.node);
+  const e = ((s = t.pageInfo) == null ? void 0 : s.hasNextPage) ?? !1, o = ((a = t.pageInfo) == null ? void 0 : a.hasPreviousPage) ?? !1, n = t.edges.map((i) => i.node);
   return {
     meta: {
       pagination: {
@@ -55,7 +55,7 @@ const g = (t) => {
       )}`
     );
   return g(s.data[Object.keys(s.data)[0]]);
-}, w = async (t) => {
+}, p = async (t) => {
   const { projectId: r, query: e, attribute: o } = t, n = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, s = await fetch(n, {
     method: "POST",
     headers: {
@@ -77,19 +77,24 @@ const g = (t) => {
     throw new Error(
       `getDataByAttribute from caisy - internal error fetching entries from caisy: ${s.statusText}`
     );
-  const i = await s.json();
-  if (i.errors)
+  const a = await s.json();
+  if (a.errors)
     throw new Error(
       `getDataByAttribute from caisy - internal error fetching entries from caisy: ${JSON.stringify(
-        i.errors
+        a.errors
       )}`
     );
-  if (!i.data)
+  if (!a.data)
     return [];
-  const a = i.data[Object.keys(i.data)[0]];
-  return f([a]);
+  const i = a.data[Object.keys(a.data)[0]];
+  return {
+    meta: {
+      pagination: {}
+    },
+    data: [f(i)]
+  };
 }, u = async (t) => {
-  const { projectId: r, query: e, perPage: o, page: n, after: s = "" } = t, i = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, a = Number.parseInt((t == null ? void 0 : t.page) ?? "1"), d = (a > 1 ? a - 1 : a) * Number.parseInt((t == null ? void 0 : t.perPage) ?? "10"), y = await fetch(i, {
+  const { projectId: r, query: e, perPage: o, page: n, after: s = "" } = t, a = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, i = Number.parseInt((t == null ? void 0 : t.page) ?? "1"), d = (i > 1 ? i - 1 : i) * Number.parseInt((t == null ? void 0 : t.perPage) ?? "10"), y = await fetch(a, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -120,7 +125,7 @@ const g = (t) => {
     );
   if (!c.data)
     return [];
-  if (a === 1 || s)
+  if (i === 1 || s)
     return g(c.data[Object.keys(c.data)[0]]);
   const { endCursor: l } = c.data[Object.keys(c.data)[0]].pageInfo;
   return await u({
@@ -130,9 +135,9 @@ const g = (t) => {
     page: n,
     after: l
   });
-}, p = async (t) => await j(t), E = async (t) => await w(t), b = async (t) => await u(t);
+}, w = async (t) => await j(t), E = async (t) => await p(t), b = async (t) => await u(t);
 export {
-  p as getEntities,
+  w as getEntities,
   b as getEntitiesWithPagination,
   E as getEntyByAttribute
 };

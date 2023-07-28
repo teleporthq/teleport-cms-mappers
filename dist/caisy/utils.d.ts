@@ -9,5 +9,5 @@ export declare const normalize: (input: any) => {
     };
     data: Array<unknown> | unknown;
 };
-export declare const normalizeContent: (input: any) => any;
+export declare const normalizeContent: (input: any[]) => any;
 //# sourceMappingURL=utils.d.ts.map
