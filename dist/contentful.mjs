@@ -259,7 +259,7 @@ const y = (e) => Array.isArray(e) ? e.map((r) => y(r)) : typeof e != "object" ? 
         pages: r
       }
     },
-    data: X(y(e))
+    data: y(X(e))
   };
 };
 export {
