@@ -55,9 +55,8 @@ export const getEntitiesByPage = async (params: {
     return []
   }
 
-
   if (requestedPage === 1 || after) {
-    return normalize(json.data[Object.keys(json.data)[0]], requestedPage)
+    return normalize(json.data[Object.keys(json.data)[0]], requestedPage.toString())
   }
 
   const { endCursor } = json.data[Object.keys(json.data)[0]].pageInfo
@@ -66,7 +65,7 @@ export const getEntitiesByPage = async (params: {
     projectId,
     query,
     perPage,
-    page,
+    page: requestedPage.toString(),
     after: endCursor
   })
 }

@@ -1,4 +1,4 @@
-export declare const normalize: (input: any) => {
+export declare const normalize: (input: any, page?: string) => {
     meta: {
         pagination?: {
             total: number;

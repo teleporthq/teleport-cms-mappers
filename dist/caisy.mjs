@@ -1,35 +1,35 @@
-const g = (t) => {
-  var s, a;
-  let r = t.page ? parseInt(t.page) : 1;
-  (!r || isNaN(r)) && (r = 1);
-  const e = ((s = t.pageInfo) == null ? void 0 : s.hasNextPage) ?? !1, o = ((a = t.pageInfo) == null ? void 0 : a.hasPreviousPage) ?? !1, n = t.edges.map((i) => i.node);
+const u = (t, r) => {
+  var a, i;
+  let e = r ? parseInt(r) : 1;
+  (!e || isNaN(e)) && (e = 1);
+  const n = ((a = t.pageInfo) == null ? void 0 : a.hasNextPage) ?? !1, o = ((i = t.pageInfo) == null ? void 0 : i.hasPreviousPage) ?? !1, s = t.edges.map((g) => g.node);
   return {
     meta: {
       pagination: {
-        total: n.length,
-        hasNextPage: e,
+        total: s.length,
+        hasNextPage: n,
         hasPrevPage: o,
-        page: r
+        page: e
       }
     },
-    data: f(n)
+    data: f(s)
   };
-}, f = (t) => Array.isArray(t) && !t.length ? [] : t == null ? t : typeof t == "object" && !Object.keys(t).length ? {} : Array.isArray(t) ? t.map((r) => f(r)) : typeof t == "object" && t.json && t.json.type === "doc" ? h(t) : Object.keys(t).reduce((r, e) => Array.isArray(t[e]) ? (r[e] = t[e].map((o) => f(o)), r) : typeof t[e] == "object" ? (r[e] = { ...f(t[e]) }, r) : (r[e] = t[e], r), {}), h = (t) => t.connections ? !t.json || typeof t.json == "string" ? "" : {
+}, f = (t) => Array.isArray(t) && !t.length ? [] : t == null ? t : typeof t == "object" && !Object.keys(t).length ? {} : Array.isArray(t) ? t.map((r) => f(r)) : typeof t == "object" && t.json && t.json.type === "doc" ? h(t) : Object.keys(t).reduce((r, e) => Array.isArray(t[e]) ? (r[e] = t[e].map((n) => f(n)), r) : typeof t[e] == "object" ? (r[e] = { ...f(t[e]) }, r) : (r[e] = t[e], r), {}), h = (t) => t.connections ? !t.json || typeof t.json == "string" ? "" : {
   content: t.json.content.map((e) => {
     if (e.type !== "documentLink" || !t.connections)
       return e;
-    const o = t.connections.find(
-      (n) => n.id === e.attrs.documentId
+    const n = t.connections.find(
+      (o) => o.id === e.attrs.documentId
     );
-    return o && (e.attrs = {
+    return n && (e.attrs = {
       ...e.attrs,
-      src: o.src,
-      title: o.title
+      src: n.src,
+      title: n.title
     }), e;
   }),
   type: t.json.type
 } : t.json, j = async (t) => {
-  const { projectId: r, query: e } = t, o = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, n = await fetch(o, {
+  const { projectId: r, query: e } = t, n = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, o = await fetch(n, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -39,24 +39,24 @@ const g = (t) => {
       query: e
     })
   });
-  if (n.status === 401 || n.status === 403)
+  if (o.status === 401 || o.status === 403)
     throw new Error(
-      `getEntriesByContentType from caisy auth or permission issue: ${n.statusText}`
+      `getEntriesByContentType from caisy auth or permission issue: ${o.statusText}`
     );
-  if (n.status !== 200)
+  if (o.status !== 200)
     throw new Error(
-      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${n.statusText}`
+      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${o.statusText}`
     );
-  const s = await n.json();
+  const s = await o.json();
   if (s.errors)
     throw new Error(
       `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${JSON.stringify(
         s.errors
       )}`
     );
-  return g(s.data[Object.keys(s.data)[0]]);
+  return u(s.data[Object.keys(s.data)[0]]);
 }, p = async (t) => {
-  const { projectId: r, query: e, attribute: o } = t, n = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, s = await fetch(n, {
+  const { projectId: r, query: e, attribute: n } = t, o = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, s = await fetch(o, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -65,7 +65,7 @@ const g = (t) => {
     body: JSON.stringify({
       query: e,
       variables: {
-        value: (t == null ? void 0 : t[`${o}`]) ?? ""
+        value: (t == null ? void 0 : t[`${n}`]) ?? ""
       }
     })
   });
@@ -93,8 +93,8 @@ const g = (t) => {
     },
     data: [f(i)]
   };
-}, u = async (t) => {
-  const { projectId: r, query: e, perPage: o, page: n, after: s = "" } = t, a = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, i = Number.parseInt((t == null ? void 0 : t.page) ?? "1"), d = (i > 1 ? i - 1 : i) * Number.parseInt((t == null ? void 0 : t.perPage) ?? "10"), y = await fetch(a, {
+}, d = async (t) => {
+  const { projectId: r, query: e, perPage: n, page: o, after: s = "" } = t, a = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, i = Number.parseInt((t == null ? void 0 : t.page) ?? "1"), g = (i > 1 ? i - 1 : i) * Number.parseInt((t == null ? void 0 : t.perPage) ?? "10"), y = await fetch(a, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -103,7 +103,7 @@ const g = (t) => {
     body: JSON.stringify({
       query: e,
       variables: {
-        first: d,
+        first: g,
         after: s
       }
     })
@@ -126,16 +126,16 @@ const g = (t) => {
   if (!c.data)
     return [];
   if (i === 1 || s)
-    return g(c.data[Object.keys(c.data)[0]]);
+    return u(c.data[Object.keys(c.data)[0]], i.toString());
   const { endCursor: l } = c.data[Object.keys(c.data)[0]].pageInfo;
-  return await u({
+  return await d({
     projectId: r,
     query: e,
-    perPage: o,
-    page: n,
+    perPage: n,
+    page: i.toString(),
     after: l
   });
-}, w = async (t) => await j(t), E = async (t) => await p(t), b = async (t) => await u(t);
+}, w = async (t) => await j(t), E = async (t) => await p(t), b = async (t) => await d(t);
 export {
   w as getEntities,
   b as getEntitiesWithPagination,

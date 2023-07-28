@@ -1,4 +1,4 @@
-export const normalize = (input): {
+export const normalize = (input, page?: string): {
   meta: {
     pagination?: {
       total: number
@@ -9,7 +9,7 @@ export const normalize = (input): {
   },
   data: Array<unknown> | unknown
 } => {
-  let currentPage = input.page ? parseInt(input.page) : 1
+  let currentPage = page ? parseInt(page) : 1
 
   if (!currentPage || isNaN(currentPage)) {
     currentPage = 1
