@@ -1,4 +1,4 @@
-import { mapListResponse } from "./utils";
+import { normalize } from "./utils";
 
 export const getEntitiesData = async (params: {
   projectId: string,
@@ -19,5 +19,26 @@ export const getEntitiesData = async (params: {
     }),
   })
 
-  return mapListResponse(response)
+  if (response.status === 401 || response.status === 403) {
+    throw new Error(
+      `getEntriesByContentType from caisy auth or permission issue: ${response.statusText}`
+    );
+  }
+  if (response.status !== 200) {
+    throw new Error(
+      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${response.statusText}`
+    );
+  }
+
+  const json = await response.json()
+
+  if (json.errors) {
+    throw new Error(
+      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${JSON.stringify(
+        json.errors
+      )}`
+    );
+  }
+
+  return normalize(json.data[Object.keys(json.data)[0]])
 }

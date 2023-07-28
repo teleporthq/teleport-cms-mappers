@@ -1,15 +1,18 @@
-import { mapListResponse } from "./utils";
+import { normalize } from "./utils";
 
 export const getEntitiesByPage = async (params: {
   projectId: string,
   query: string,
-  page: number,
-  perPage: number,
+  page: string,
+  perPage: string,
+  after?: string
 }) => {
-  const { projectId, query } = params
+  const { projectId, query, perPage, page, after = '' } = params
   const url = `https://cloud.caisy.io/api/v3/e/${projectId}/graphql`;
 
-  const firstParam = Number.parseInt(params?.['page'] ?? "1") * Number.parseInt(params?.['perPage'] ?? "10")
+  const requestedPage = Number.parseInt(params?.['page'] ?? "1")
+
+  const firstParam = (requestedPage > 1 ? requestedPage -1 : requestedPage ) * Number.parseInt(params?.['perPage'] ?? "10")
 
   const response = await fetch(url, {
     method: "POST",
@@ -21,10 +24,11 @@ export const getEntitiesByPage = async (params: {
       query,
       variables: {
         first: firstParam,
-        after: '',
+        after,
       }
     }),
   })
+
 
   if (response.status === 401 || response.status === 403) {
     throw new Error(
@@ -51,22 +55,18 @@ export const getEntitiesByPage = async (params: {
     return []
   }
 
+
+  if (requestedPage === 1 || after) {
+    return normalize(json.data[Object.keys(json.data)[0]], requestedPage)
+  }
+
   const { endCursor } = json.data[Object.keys(json.data)[0]].pageInfo
 
-  const nextResponse = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-caisy-token": process.env.CMS_ACCESS_TOKEN,
-    },
-    body: JSON.stringify({
-      query,
-      variables: {
-        first: Number.parseInt(params?.['perPage']) ?? 10,
-        after: endCursor ?? ''
-      }
-    }),
+  return await getEntitiesByPage({
+    projectId,
+    query,
+    perPage,
+    page,
+    after: endCursor
   })
-
-  return mapListResponse(nextResponse)
 }

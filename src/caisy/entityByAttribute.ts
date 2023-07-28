@@ -1,10 +1,11 @@
+import { normalizeContent } from "./utils";
+
 export const getDataByAttribute = async (params: {
   projectId: string,
   query: string,
   attribute: string
 }) => {
   const { projectId, query, attribute } = params
-
   const url = `https://cloud.caisy.io/api/v3/e/${projectId}/graphql`;
 
   const response = await fetch(url, {
@@ -47,8 +48,5 @@ export const getDataByAttribute = async (params: {
   }
 
   const nodeResponse = json.data[Object.keys(json.data)[0]]
-  return [nodeResponse]
+  return normalizeContent([nodeResponse])
 }
-
-
-

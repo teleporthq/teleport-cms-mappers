@@ -1,36 +1,38 @@
-
-export const mapListResponse = async (response: Response) => {
-  if (response.status === 401 || response.status === 403) {
-    throw new Error(
-      `getEntriesByContentType from caisy auth or permission issue: ${response.statusText}`
-    );
-  }
-  if (response.status !== 200) {
-    throw new Error(
-      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${response.statusText}`
-    );
-  }
-
-  const json = await response.json()
-
-  if (json.errors) {
-    throw new Error(
-      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${JSON.stringify(
-        json.errors
-      )}`
-    );
+export const normalize = (input): {
+  meta: {
+    pagination?: {
+      total: number
+      page: number
+      hasNextPage: boolean
+      hasPrevPage: boolean
+    }
+  },
+  data: Array<unknown> | unknown
+} => {
+  let currentPage = parseInt(input.page)
+  if (!currentPage || isNaN(currentPage)) {
+    currentPage = 1
   }
 
-  if (json.data) {
-    // get only the nodes from the response
-    const nodes = json.data[Object.keys(json.data)[0]].edges.map((e: any) => e.node)
-    return nodes
-  }
+  const hasNextPage = input.pageInfo?.hasNextPage ?? false
+  const hasPrevPage = input.pageInfo?.hasPreviousPage ?? false
 
-  return []
+  const nodes = input.edges.map((e:any) => e.node)
+
+  return {
+    meta: {
+      pagination: {
+        total: nodes.length,
+        hasNextPage,
+        hasPrevPage,
+        page: currentPage,
+      },
+    },
+    data: normalizeContent(nodes),
+  }
 }
 
-export const normalize = (input) => {
+export const normalizeContent = (input) => {
   if (Array.isArray(input) && !input.length) {
     return []
   }
@@ -44,24 +46,24 @@ export const normalize = (input) => {
   }
 
   if (Array.isArray(input)) {
-    return input.map((inputArr) => normalize(inputArr))
+    return input.map((inputArr) => normalizeContent(inputArr))
   }
 
   if (typeof input === 'object' && input.json && input.json.type === 'doc') {
-    return resolveRichTextLinkedAssets(input.json)
+    return resolveRichTextLinkedAssets(input)
   }
 
   return Object.keys(input).reduce((acc, key) => {
     if (Array.isArray(input[key])) {
       acc[key] = input[key].map((item) => {
-        return normalize(item)
+        return normalizeContent(item)
       })
 
       return acc
     }
 
     if (typeof input[key] === 'object') {
-      acc[key] = { ...normalize(input[key]) }
+      acc[key] = { ...normalizeContent(input[key]) }
 
       return acc
     }
@@ -70,7 +72,6 @@ export const normalize = (input) => {
     return acc
   }, {})
 }
-
 
 const resolveRichTextLinkedAssets = (richTextData: {
   connections?: Record<string, unknown>[]
