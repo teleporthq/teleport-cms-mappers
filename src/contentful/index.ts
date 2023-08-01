@@ -106,6 +106,6 @@ export const normalize = (
         pages,
       },
     },
-    data: resolveContentfulResponse(normalizeContent(content)),
+    data: normalizeContent(resolveContentfulResponse(content)),
   }
 }

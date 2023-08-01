@@ -1,7 +1,7 @@
 {
-  "name": "@teleporthq/cms-mapper",
+  "name": "@teleporthq/cms-mappers",
   "version": "0.0.0",
-  "main": "dist/contentful.js",
+  "main": "dist/index.js",
   "module": "dist/contentful.mjs",
   "types": "dist/contentful/index.d.ts",
   "author": "teleportHQ",
@@ -12,10 +12,20 @@
       "require": "./dist/contentful.js",
       "types": "./dist/contentful/index.d.ts"
     },
+    "./contentful/revalidate": {
+      "import": "./dist/contentful-revalidator.mjs",
+      "require": "./dist/contentful-revalidator.js",
+      "types": "./dist/contentful/revalidate.d.ts"
+    },
     "./strapi": {
       "import": "./dist/strapi.mjs",
       "require": "./dist/strapi.js",
       "types": "./dist/strapi/index.d.ts"
+    },
+    "./strapi/revalidate": {
+      "import": "./dist/strapi-revalidator.mjs",
+      "require": "./dist/strapi-revalidator.js",
+      "types": "./dist/strapi/revalidate.d.ts"
     },
     "./wordpress": {
       "import": "./dist/wordpress.mjs",
@@ -27,11 +37,23 @@
       "require": "./dist/caisy.js",
       "types": "./dist/caisy/index.d.ts"
     },
+    "./wordpress/revalidate": {
+      "import": "./dist/wordpress-revalidator.mjs",
+      "require": "./dist/wordpress-revalidator.js",
+      "types": "./dist/wordpress/revalidate.d.ts"
+    },
+    ".": {
+      "import": "./dist/contentful.mjs",
+      "require": "./dist/contentful.js",
+      "types": "./dist/contentful/index.d.ts"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
     "lint": "eslint",
     "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
     "dev": "vite build --watch"
   },
   "husky": {
@@ -60,6 +82,7 @@
   "devDependencies": {
     "@types/contentful-resolve-response": "^0.1.31",
     "@types/he": "^1.2.0",
+    "@types/node": "18",
     "@typescript-eslint/eslint-plugin": "^5.59.2",
     "@typescript-eslint/parser": "^5.59.2",
     "eslint": "^8.39.0",
@@ -71,7 +94,7 @@
     "pretty-quick": "^3.1.3",
     "release-it": "^15.10.3",
     "typescript": "^5.0.4",
-    "vite": "^4.3.4",
+    "vite": "^4.4.4",
     "vite-plugin-dts": "^2.3.0",
     "vite-plugin-eslint": "^1.8.1"
   },
