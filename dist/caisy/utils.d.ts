@@ -1,4 +1,4 @@
-export declare const normalize: (input: any, page?: string) => {
+export declare const normalizeList: (input: any, page?: string) => {
     meta: {
         pagination?: {
             total: number;
@@ -9,5 +9,10 @@ export declare const normalize: (input: any, page?: string) => {
     };
     data: Array<unknown> | unknown;
 };
-export declare const normalizeContent: (input: any[]) => any;
+export declare const normalizeItem: (input: Record<string, unknown>) => {
+    meta: {
+        pagination: {};
+    };
+    data: any[];
+};
 //# sourceMappingURL=utils.d.ts.map

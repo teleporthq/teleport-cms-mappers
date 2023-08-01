@@ -1,7 +1,7 @@
-import { normalizeContent } from "./utils";
+import { normalizeItem } from "./utils";
 
 /**
- * 
+ *
  */
 export const getDataByAttribute = async (params: {
   projectId: string,
@@ -46,20 +46,5 @@ export const getDataByAttribute = async (params: {
     )
   }
 
-  if (!json.data) {
-    return {
-      meta: {
-        pagination: {}
-      },
-      data: []
-    }
-  }
-
-  const nodeResponse = json.data[Object.keys(json.data)[0]]
-  return {
-    meta: {
-      pagination: {}
-    },
-    data: [normalizeContent(nodeResponse)]
-  }
+  return normalizeItem(json)
 }

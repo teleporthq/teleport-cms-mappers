@@ -1,4 +1,4 @@
-export const normalize = (input, page?: string): {
+export const normalizeList = (input, page?: string): {
   meta: {
     pagination?: {
       total: number
@@ -33,7 +33,26 @@ export const normalize = (input, page?: string): {
   }
 }
 
-export const normalizeContent = (input: any[]) => {
+export const normalizeItem = (input: Record<string, unknown>) => {
+  if (!input.data || !Object.keys(input.data).length) {
+    return {
+      meta: {
+        pagination: {}
+      },
+      data: []
+    }
+  }
+
+  const nodeResponse = input.data[Object.keys(input.data)[0]]
+  return {
+    meta: {
+      pagination: {}
+    },
+    data: [normalizeContent(nodeResponse)]
+  }
+}
+
+const normalizeContent = (input: any) => {
   if (Array.isArray(input) && !input.length) {
     return []
   }
@@ -54,7 +73,7 @@ export const normalizeContent = (input: any[]) => {
     return resolveRichTextLinkedAssets(input)
   }
 
-  return Object.keys(input).reduce((acc, key) => {
+  return Object.keys(input).reduce((acc: Record<string, unknown>, key) => {
     if (Array.isArray(input[key])) {
       acc[key] = input[key].map((item: any[]) => {
         return normalizeContent(item)

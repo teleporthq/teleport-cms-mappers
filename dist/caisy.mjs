@@ -13,7 +13,22 @@ const g = (t, r) => {
     },
     data: y(s)
   };
-}, y = (t) => Array.isArray(t) && !t.length ? [] : t == null ? t : typeof t == "object" && !Object.keys(t).length ? {} : Array.isArray(t) ? t.map((r) => y(r)) : typeof t == "object" && t.json && t.json.type === "doc" ? m(t) : Object.keys(t).reduce((r, e) => Array.isArray(t[e]) ? (r[e] = t[e].map((a) => y(a)), r) : typeof t[e] == "object" ? (r[e] = { ...y(t[e]) }, r) : (r[e] = t[e], r), {}), m = (t) => t.connections ? !t.json || typeof t.json == "string" ? "" : {
+}, d = (t) => {
+  if (!t.data || !Object.keys(t.data).length)
+    return {
+      meta: {
+        pagination: {}
+      },
+      data: []
+    };
+  const r = t.data[Object.keys(t.data)[0]];
+  return {
+    meta: {
+      pagination: {}
+    },
+    data: [y(r)]
+  };
+}, y = (t) => Array.isArray(t) && !t.length ? [] : t == null ? t : typeof t == "object" && !Object.keys(t).length ? {} : Array.isArray(t) ? t.map((r) => y(r)) : typeof t == "object" && t.json && t.json.type === "doc" ? j(t) : Object.keys(t).reduce((r, e) => Array.isArray(t[e]) ? (r[e] = t[e].map((a) => y(a)), r) : typeof t[e] == "object" ? (r[e] = { ...y(t[e]) }, r) : (r[e] = t[e], r), {}), j = (t) => t.connections ? !t.json || typeof t.json == "string" ? "" : {
   content: t.json.content.map((e) => {
     if (e.type !== "documentLink" || !t.connections)
       return e;
@@ -27,7 +42,7 @@ const g = (t, r) => {
     }), e;
   }),
   type: t.json.type
-} : t.json, j = async (t) => {
+} : t.json, w = async (t) => {
   const { projectId: r, query: e } = t, a = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, n = await fetch(a, {
     method: "POST",
     headers: {
@@ -54,7 +69,7 @@ const g = (t, r) => {
       )}`
     );
   return g(s.data[Object.keys(s.data)[0]]);
-}, w = async (t) => {
+}, E = async (t) => {
   const { projectId: r, query: e, attribute: a } = t, n = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, s = await fetch(n, {
     method: "POST",
     headers: {
@@ -83,22 +98,9 @@ const g = (t, r) => {
         o.errors
       )}`
     );
-  if (!o.data)
-    return {
-      meta: {
-        pagination: {}
-      },
-      data: []
-    };
-  const i = o.data[Object.keys(o.data)[0]];
-  return {
-    meta: {
-      pagination: {}
-    },
-    data: [y(i)]
-  };
-}, d = async (t) => {
-  const { projectId: r, query: e, perPage: a, page: n, after: s = "" } = t, o = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, i = Number.parseInt(t?.page ?? "1"), u = Number.parseInt(t?.perPage ?? "10"), l = s ? u : (i > 1 ? i - 1 : i) * u, f = await fetch(o, {
+  return d(o);
+}, l = async (t) => {
+  const { projectId: r, query: e, perPage: a, page: n, after: s = "" } = t, o = `https://cloud.caisy.io/api/v3/e/${r}/graphql`, c = Number.parseInt(t?.page ?? "1"), u = Number.parseInt(t?.perPage ?? "10"), m = s ? u : (c > 1 ? c - 1 : c) * u, f = await fetch(o, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -107,7 +109,7 @@ const g = (t, r) => {
     body: JSON.stringify({
       query: e,
       variables: {
-        first: l,
+        first: m,
         after: s
       }
     })
@@ -120,27 +122,28 @@ const g = (t, r) => {
     throw new Error(
       `getEntitiesByPage from caisy - internal error fetching entries from caisy: ${f.statusText}`
     );
-  const c = await f.json();
-  if (c.errors)
+  const i = await f.json();
+  if (i.errors)
     throw new Error(
       `getEntitiesByPage from caisy - internal error fetching entries from caisy: ${JSON.stringify(
-        c.errors
+        i.errors
       )}`
     );
-  if (!c.data)
+  if (!i.data)
     return [];
-  const { endCursor: h, hasNextPage: p } = c.data[Object.keys(c.data)[0]].pageInfo;
-  return i === 1 || !p || s ? g(c.data[Object.keys(c.data)[0]], i.toString()) : await d({
+  const { endCursor: h, hasNextPage: p } = i.data[Object.keys(i.data)[0]].pageInfo;
+  return c === 1 || !p || s ? g(i.data[Object.keys(i.data)[0]], c.toString()) : await l({
     projectId: r,
     query: e,
     perPage: a,
-    page: i.toString(),
+    page: c.toString(),
     after: h
   });
-}, E = async (t) => await j(t), b = async (t) => await w(t), P = async (t) => await d(t), S = (t) => g(t);
+}, b = async (t) => await w(t), P = async (t) => await E(t), C = async (t) => await l(t), S = (t) => g(t), O = (t) => d(t);
 export {
-  E as getEntities,
-  P as getEntitiesWithPagination,
-  b as getEntityByAttribute,
-  S as normalizeCaisyContent
+  b as getEntities,
+  C as getEntitiesWithPagination,
+  P as getEntityByAttribute,
+  O as normalizeCaisyItemContent,
+  S as normalizeCaisyListContent
 };

@@ -16,7 +16,7 @@ export declare const getEntityByAttribute: (params: any) => Promise<{
     data: any[];
 }>;
 export declare const getEntitiesWithPagination: (params: any) => Promise<any>;
-export declare const normalizeCaisyContent: (params: any) => {
+export declare const normalizeCaisyListContent: (params: any) => {
     meta: {
         pagination?: {
             total: number;
@@ -26,5 +26,11 @@ export declare const normalizeCaisyContent: (params: any) => {
         };
     };
     data: unknown;
+};
+export declare const normalizeCaisyItemContent: (params: any) => {
+    meta: {
+        pagination: {};
+    };
+    data: any[];
 };
 //# sourceMappingURL=index.d.ts.map

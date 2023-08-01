@@ -1,4 +1,4 @@
-import { normalize } from "./utils";
+import { normalizeList } from "./utils";
 
 export const getEntitiesData = async (params: {
   projectId: string,
@@ -22,12 +22,12 @@ export const getEntitiesData = async (params: {
   if (response.status === 401 || response.status === 403) {
     throw new Error(
       `getEntitiesData from caisy auth or permission issue: ${response.statusText}`
-    );
+    )
   }
   if (response.status !== 200) {
     throw new Error(
       `getEntitiesData from caisy - internal error fetching entries from caisy: ${response.statusText}`
-    );
+    )
   }
 
   const json = await response.json()
@@ -37,8 +37,8 @@ export const getEntitiesData = async (params: {
       `getEntitiesData from caisy - internal error fetching entries from caisy: ${JSON.stringify(
         json.errors
       )}`
-    );
+    )
   }
 
-  return normalize(json.data[Object.keys(json.data)[0]])
+  return normalizeList(json.data[Object.keys(json.data)[0]])
 }

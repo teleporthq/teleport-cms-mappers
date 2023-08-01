@@ -1,4 +1,4 @@
-import { normalize } from "./utils";
+import { normalizeList } from "./utils";
 
 /**
  * When getting entities by page in caisy we might need to do multiple calls
@@ -71,7 +71,7 @@ export const getEntitiesByPage = async (params: {
   // if hasNextPage is false, no need to look for the next page, just return this one for now
   // if requestedPage is 1, no need for the second call
   if (requestedPage === 1 || !hasNextPage || after) {
-    return normalize(json.data[Object.keys(json.data)[0]], requestedPage.toString())
+    return normalizeList(json.data[Object.keys(json.data)[0]], requestedPage.toString())
   }
 
   return await getEntitiesByPage({
