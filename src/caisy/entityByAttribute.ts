@@ -1,50 +1,39 @@
-import { normalizeItem } from "./utils";
+import {
+  getAPIUrlByProjectId,
+  handleFetchResponse as checkFetchResponseStatus,
+  normalizeItem,
+} from './utils'
 
 /**
- *
+ * gets and entity by attribute, which can be entity by Id or entity by name, depending on how the url and details page is generated
  */
 export const getDataByAttribute = async (params: {
-  projectId: string,
-  query: string,
+  projectId: string
+  query: string
   attribute: string
 }) => {
   const { projectId, query, attribute } = params
-  const url = `https://cloud.caisy.io/api/v3/e/${projectId}/graphql`;
+  const url = getAPIUrlByProjectId(projectId)
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-caisy-token": process.env.CMS_ACCESS_TOKEN,
-    },
-    body: JSON.stringify({
-      query,
-      variables: {
-        value: params?.[`${attribute}`] ?? ''
-      }
-    }),
-  })
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-caisy-token': process.env.CMS_ACCESS_TOKEN,
+      },
+      body: JSON.stringify({
+        query,
+        variables: {
+          value: params?.[`${attribute}`] ?? '',
+        },
+      }),
+    })
 
-  if (response.status === 401 || response.status === 403) {
-    throw new Error(
-      `getDataByAttribute from caisy auth or permission issue: ${response.statusText}`
-    )
+    const responseJSON = await checkFetchResponseStatus(response)
+
+    return normalizeItem(responseJSON)
+  } catch (err) {
+    throw new Error(err.message)
   }
-  if (response.status !== 200) {
-    throw new Error(
-      `getDataByAttribute from caisy - internal error fetching entries from caisy: ${response.statusText}`
-    )
-  }
-
-  const json = await response.json();
-
-  if (json.errors) {
-    throw new Error(
-      `getDataByAttribute from caisy - internal error fetching entries from caisy: ${JSON.stringify(
-        json.errors
-      )}`
-    )
-  }
-
-  return normalizeItem(json)
 }

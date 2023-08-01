@@ -1,1 +1,1 @@
-{"version":3,"file":"entities.d.ts","sourceRoot":"","sources":["../../../src/caisy/entities.ts"],"names":[],"mappings":"AAEA,eAAO,MAAM,eAAe,WAAkB;IAC5C,SAAS,EAAE,MAAM,CAAC;IAClB,KAAK,EAAE,MAAM,CAAC;CACf;;;;;;;;;;EAsCA,CAAA"}
+{"version":3,"file":"entities.d.ts","sourceRoot":"","sources":["../../../src/caisy/entities.ts"],"names":[],"mappings":"AAEA,eAAO,MAAM,eAAe,WAAkB;IAC5C,SAAS,EAAE,MAAM,CAAC;IAClB,KAAK,EAAE,MAAM,CAAC;CACf;;;;;;;;;;EAkBA,CAAA"}

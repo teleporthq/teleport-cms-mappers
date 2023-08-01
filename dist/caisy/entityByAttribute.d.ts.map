@@ -1,1 +1,1 @@
-{"version":3,"file":"entityByAttribute.d.ts","sourceRoot":"","sources":["../../../src/caisy/entityByAttribute.ts"],"names":[],"mappings":"AAEA;;GAEG;AACH,eAAO,MAAM,kBAAkB,WAAkB;IAC/C,SAAS,EAAE,MAAM,CAAC;IAClB,KAAK,EAAE,MAAM,CAAC;IACd,SAAS,EAAE,MAAM,CAAA;CAClB;;;;;EAwCA,CAAA"}
+{"version":3,"file":"entityByAttribute.d.ts","sourceRoot":"","sources":["../../../src/caisy/entityByAttribute.ts"],"names":[],"mappings":"AAMA;;GAEG;AACH,eAAO,MAAM,kBAAkB,WAAkB;IAC/C,SAAS,EAAE,MAAM,CAAA;IACjB,KAAK,EAAE,MAAM,CAAA;IACb,SAAS,EAAE,MAAM,CAAA;CAClB;;;;;EAyBA,CAAA"}

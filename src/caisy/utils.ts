@@ -141,3 +141,32 @@ const resolveRichTextLinkedAssets = (richTextData: {
     type: richTextData.json.type,
   }
 }
+
+export const getAPIUrlByProjectId = (projectId: string) => {
+  return `https://cloud.caisy.io/api/v3/e/${projectId}/graphql`
+}
+
+export const handleFetchResponse = async (response: Response) => {
+  if (response.status === 401 || response.status === 403) {
+    throw new Error(
+      `Caisy auth or permission issue: ${response.statusText}`
+    )
+  }
+  if (response.status !== 200) {
+    throw new Error(
+      `Internal error fetching entries from Caisy: ${response.statusText}`
+    )
+  }
+
+  const json = await response.json()
+
+  if (json.errors) {
+    throw new Error(
+      `getEntitiesByPage from caisy - internal error fetching entries from caisy: ${JSON.stringify(
+        json.errors
+      )}`
+    )
+  }
+
+  return json
+}

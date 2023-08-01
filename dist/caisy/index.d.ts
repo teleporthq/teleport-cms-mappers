@@ -1,36 +1,6 @@
-export declare const getEntities: (params: any) => Promise<{
-    meta: {
-        pagination?: {
-            total: number;
-            page: number;
-            hasNextPage: boolean;
-            hasPrevPage: boolean;
-        };
-    };
-    data: unknown;
-}>;
-export declare const getEntityByAttribute: (params: any) => Promise<{
-    meta: {
-        pagination: {};
-    };
-    data: any[];
-}>;
-export declare const getEntitiesWithPagination: (params: any) => Promise<any>;
-export declare const normalizeCaisyListContent: (params: any) => {
-    meta: {
-        pagination?: {
-            total: number;
-            page: number;
-            hasNextPage: boolean;
-            hasPrevPage: boolean;
-        };
-    };
-    data: unknown;
-};
-export declare const normalizeCaisyItemContent: (params: any) => {
-    meta: {
-        pagination: {};
-    };
-    data: any[];
-};
+export { getEntitiesData as getEntities } from './entities';
+export { getDataByAttribute as getEntityByAttribute } from "./entityByAttribute";
+export { getEntitiesByPage as getEntitiesWithPagination } from "./entitiesByPage";
+export { normalizeList as normalizeCaisyListContent } from "./utils";
+export { normalizeItem as normalizeCaisyItemContent } from "./utils";
 //# sourceMappingURL=index.d.ts.map
