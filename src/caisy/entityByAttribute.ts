@@ -1,5 +1,8 @@
 import { normalizeContent } from "./utils";
 
+/**
+ * 
+ */
 export const getDataByAttribute = async (params: {
   projectId: string,
   query: string,
@@ -44,7 +47,12 @@ export const getDataByAttribute = async (params: {
   }
 
   if (!json.data) {
-    return []
+    return {
+      meta: {
+        pagination: {}
+      },
+      data: []
+    }
   }
 
   const nodeResponse = json.data[Object.keys(json.data)[0]]

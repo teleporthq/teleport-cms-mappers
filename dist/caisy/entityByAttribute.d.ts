@@ -1,8 +1,11 @@
+/**
+ *
+ */
 export declare const getDataByAttribute: (params: {
     projectId: string;
     query: string;
     attribute: string;
-}) => Promise<any[] | {
+}) => Promise<{
     meta: {
         pagination: {};
     };

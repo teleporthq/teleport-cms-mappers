@@ -1,5 +1,14 @@
 import { normalize } from "./utils";
 
+/**
+ * When getting entities by page in caisy we might need to do multiple calls
+ * 1. if page == 1 or next page doesn't exist, we just read them from one call
+ * 2. if page > 1, we fetch all the entities before the requested page
+ * 3. we save the "endCursor", which is the last item identifier from the previous call
+ * 4. Then, we request the first "perPage" number of items, after the given endCursor
+ * More info on the official doc:
+ * https://caisy.io/developer/docs/external-api/queries-pagination#top
+ */
 export const getEntitiesByPage = async (params: {
   projectId: string,
   query: string,
@@ -11,8 +20,9 @@ export const getEntitiesByPage = async (params: {
   const url = `https://cloud.caisy.io/api/v3/e/${projectId}/graphql`;
 
   const requestedPage = Number.parseInt(params?.['page'] ?? "1")
+  const requestedPerPage = Number.parseInt(params?.['perPage'] ?? "10")
 
-  const firstParam = (requestedPage > 1 ? requestedPage -1 : requestedPage ) * Number.parseInt(params?.['perPage'] ?? "10")
+  const firstParam = !after ? (requestedPage > 1 ? requestedPage -1 : requestedPage ) * requestedPerPage : requestedPerPage
 
   const response = await fetch(url, {
     method: "POST",
@@ -32,12 +42,12 @@ export const getEntitiesByPage = async (params: {
 
   if (response.status === 401 || response.status === 403) {
     throw new Error(
-      `getEntriesByContentType from caisy auth or permission issue: ${response.statusText}`
+      `getEntitiesByPage from caisy auth or permission issue: ${response.statusText}`
     )
   }
   if (response.status !== 200) {
     throw new Error(
-      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${response.statusText}`
+      `getEntitiesByPage from caisy - internal error fetching entries from caisy: ${response.statusText}`
     )
   }
 
@@ -45,7 +55,7 @@ export const getEntitiesByPage = async (params: {
 
   if (json.errors) {
     throw new Error(
-      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${JSON.stringify(
+      `getEntitiesByPage from caisy - internal error fetching entries from caisy: ${JSON.stringify(
         json.errors
       )}`
     )
@@ -55,11 +65,14 @@ export const getEntitiesByPage = async (params: {
     return []
   }
 
-  if (requestedPage === 1 || after) {
+  const { endCursor, hasNextPage } = json.data[Object.keys(json.data)[0]].pageInfo
+
+  // if after is defined, it means we already requested the first items and we just need to return
+  // if hasNextPage is false, no need to look for the next page, just return this one for now
+  // if requestedPage is 1, no need for the second call
+  if (requestedPage === 1 || !hasNextPage || after) {
     return normalize(json.data[Object.keys(json.data)[0]], requestedPage.toString())
   }
-
-  const { endCursor } = json.data[Object.keys(json.data)[0]].pageInfo
 
   return await getEntitiesByPage({
     projectId,

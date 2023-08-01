@@ -101,10 +101,11 @@ const resolveRichTextLinkedAssets = (richTextData: {
     if (!richTextData.connections) {
       return node
     }
-    // TODO: ? can I also have linked entries, to handle in v2
+    // TODO: Linked entries are not handled for now
     const linkedAssetAttrs = richTextData.connections.find(
-      (connection) => connection.id === node.attrs.documentId
+      (connection) => connection?.__typename == "Asset" && connection.id === node.attrs.documentId
     )
+
     if (linkedAssetAttrs) {
       node.attrs = {
         ...node.attrs,

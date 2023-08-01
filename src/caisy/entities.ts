@@ -21,12 +21,12 @@ export const getEntitiesData = async (params: {
 
   if (response.status === 401 || response.status === 403) {
     throw new Error(
-      `getEntriesByContentType from caisy auth or permission issue: ${response.statusText}`
+      `getEntitiesData from caisy auth or permission issue: ${response.statusText}`
     );
   }
   if (response.status !== 200) {
     throw new Error(
-      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${response.statusText}`
+      `getEntitiesData from caisy - internal error fetching entries from caisy: ${response.statusText}`
     );
   }
 
@@ -34,7 +34,7 @@ export const getEntitiesData = async (params: {
 
   if (json.errors) {
     throw new Error(
-      `getEntriesByContentType from caisy - internal error fetching entries from caisy: ${JSON.stringify(
+      `getEntitiesData from caisy - internal error fetching entries from caisy: ${JSON.stringify(
         json.errors
       )}`
     );
