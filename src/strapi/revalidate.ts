@@ -12,7 +12,13 @@ interface StrapiWebhookResponse {
   As, the field get's updated for every entry.publush/entry.unpublish too.
 */
 
-const ALLOWED_OPERATIONS: string[] = ['etnry.create', 'entry.update', 'entry.delete']
+const ALLOWED_OPERATIONS: string[] = [
+  'etnry.create',
+  'entry.update',
+  'entry.delete',
+  'entry.publish',
+  'entry.unpublish',
+]
 
 export const revalidate: WebHookHandler<StrapiWebhookResponse, unknown> = async (request, cb) => {
   const content = request.body
