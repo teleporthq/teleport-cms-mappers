@@ -83,7 +83,16 @@ const normalizeContent = (input: any) => {
     }
 
     if (typeof input[key] === 'object') {
-      acc[key] = { ...normalizeContent(input[key]) }
+      let inputData = input[key]
+
+      if (inputData?._meta) {
+        inputData = {
+          ...inputData,
+          ...inputData._meta,
+        }
+      }
+
+      acc[key] = {...normalizeContent(inputData)}
 
       return acc
     }
