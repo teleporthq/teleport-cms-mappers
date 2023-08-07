@@ -69,6 +69,10 @@ const normalizeContent = (input: any) => {
     return input.map((inputArr) => normalizeContent(inputArr))
   }
 
+  if (Object.keys(input._meta || {})?.length) {
+    return normaliseObject(input)
+  }
+
   if (typeof input === 'object' && input.json && input.json.type === 'doc') {
     return resolveRichTextLinkedAssets(input)
   }
@@ -83,23 +87,27 @@ const normalizeContent = (input: any) => {
     }
 
     if (typeof input[key] === 'object') {
-      let inputData = input[key]
-
-      if (inputData?._meta) {
-        inputData = {
-          ...inputData,
-          ...inputData._meta,
-        }
-      }
-
-      acc[key] = {...normalizeContent(inputData)}
-
+      acc[key] = {...normalizeContent(normaliseObject(input[key]))}
       return acc
     }
 
     acc[key] = input[key]
     return acc
   }, {})
+}
+
+const normaliseObject = (input) => {
+  let newData = input
+
+  if (newData?._meta) {
+    newData = {
+      ...newData,
+      ...newData._meta,
+    }
+    delete newData._meta
+  }
+
+  return newData
 }
 
 const resolveRichTextLinkedAssets = (richTextData: {
