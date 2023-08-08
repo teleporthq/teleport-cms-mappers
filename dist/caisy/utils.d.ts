@@ -15,6 +15,17 @@ export declare const normalizeItem: (input: Record<string, unknown>) => {
     };
     data: any[];
 };
+export declare const normalizeAssetData: (input: any) => {
+    id: any;
+    name: any;
+    alt: any;
+    url: any;
+    assetType: any;
+    size: {
+        height: any;
+        width: any;
+    };
+};
 export declare const getAPIUrlByProjectId: (projectId: string) => string;
 export declare const handleFetchResponse: (response: Response) => Promise<any>;
 //# sourceMappingURL=utils.d.ts.map

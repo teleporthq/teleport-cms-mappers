@@ -70,7 +70,7 @@ const normalizeContent = (input: any) => {
   }
 
   if (Object.keys(input._meta || {})?.length) {
-    return normaliseObject(input)
+    return {...normalizeContent(normaliseObject(input))}
   }
 
   if (typeof input === 'object' && input.json && input.json.type === 'doc') {
@@ -107,7 +107,28 @@ const normaliseObject = (input) => {
     delete newData._meta
   }
 
+  if (newData?.__typename === 'Asset') {
+    newData = {
+      ...newData,
+      ...normalizeAssetData(newData)
+    }
+  }
+
   return newData
+}
+
+export const normalizeAssetData = (input) => {
+  return {
+    id: input.id,
+    name: input.title,
+    alt: input.keywords,
+    url: input.src,
+    assetType: input.originType,
+    size: {
+      height: input.height,
+      width: input.width,
+    },
+  }
 }
 
 const resolveRichTextLinkedAssets = (richTextData: {
