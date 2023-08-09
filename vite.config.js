@@ -16,6 +16,7 @@ export default defineConfig({
         'contentful-revalidator': resolve(__dirname, "src/contentful/revalidate.ts"),
         'strapi-revalidator': resolve(__dirname, "src/strapi/revalidate.ts"),
         'wordpress-revalidator': resolve(__dirname, "src/wordpress/revalidate.ts"),
+        'caisy-revalidator': resolve(__dirname, "src/caisy/revalidate.ts"),
         caisy: resolve(__dirname, "src/caisy/index.ts"),
       },
       formats: ["es", "cjs"],
