@@ -37,6 +37,11 @@
       "require": "./dist/caisy.js",
       "types": "./dist/caisy/index.d.ts"
     },
+    "./caisy/revalidate": {
+      "import": "./dist/caisy-revalidator.mjs",
+      "require": "./dist/caisy-revalidator.js",
+      "types": "./dist/caisy/revalidate.d.ts"
+    },
     "./wordpress/revalidate": {
       "import": "./dist/wordpress-revalidator.mjs",
       "require": "./dist/wordpress-revalidator.js",
