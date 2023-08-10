@@ -1,6 +1,6 @@
 import { WebHookHandler } from "types"
 
-const SUPPORTED_EVENTS = ['document_update']
+const SUPPORTED_EVENTS = ['document_update', 'document_delete', 'document_create']
 
 interface CaisyWebhookResponse {
   event_id: string
