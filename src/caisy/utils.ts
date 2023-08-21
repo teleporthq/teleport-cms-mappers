@@ -43,7 +43,13 @@ export const normalizeItem = (input: Record<string, unknown>) => {
     }
   }
 
-  const nodeResponse = input.data[Object.keys(input.data)[0]]
+  let nodeResponse = input.data[Object.keys(input.data)[0]]
+
+  // if item is queried by slug or other custom field, response is received differently then when we're querying by id
+  if (nodeResponse.edges) {
+    nodeResponse = nodeResponse.edges.map((e:any) => e.node)?.[0]
+  }
+
   return {
     meta: {
       pagination: {}
