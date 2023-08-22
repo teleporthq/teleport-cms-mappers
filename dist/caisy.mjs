@@ -22,7 +22,7 @@ const l = (e, t) => {
       data: []
     };
   let t = e.data[Object.keys(e.data)[0]];
-  return t.edges && (t = t.edges.map((s) => s.node)?.[0]), {
+  return t?.edges && (t = t.edges.map((s) => s.node)?.[0]), {
     meta: {
       pagination: {}
     },
