@@ -1,117 +1,77 @@
-function toPlainObject(obj) {
-    if (typeof obj !== 'object' || obj === null) {
-      return obj
-    }
-  
-    const plainObj = {}
-  
-    for (const key in obj) {
-      plainObj[key] = toPlainObject(obj[key])
-    }
-  
-    return plainObj
+const FLOTIQ_API_URL = 'https://api.flotiq.com'
+
+export const normalizeContent = (content) => {
+  if (Array.isArray(content)) {
+    return content.map((item) => normalizeContent(item))
   }
-  
-  const normalizeNestedAttributes = (attributes) => {
-    const output = {}
-  
-    for (const key in attributes) {
-      const value = attributes[key]
-  
-      if (
-        typeof value === 'object' &&
-        value !== null &&
-        'data' in value &&
-        value.data !== null &&
-        'id' in value.data &&
-        'attributes' in value.data
-      ) {
-        const normalizedValue = normalizeContent(value)
-        output[key] = { id: value.data.id, ...normalizedValue }
+
+  if (typeof content !== 'object') {
+    return content
+  }
+
+  const result = Object.keys(content).reduce((acc, key) => {
+    const value = content[key]
+    if (Array.isArray(value)) {
+      if (value.length === 1) {
+        acc[key] = value[0]
+        if (content[key][0].url) {
+          acc[key].url = `${FLOTIQ_API_URL}${content[key][0].url}`
+        }
       } else {
-        output[key] = toPlainObject(value)
+        value.forEach((item) => {
+          if (item.url) {
+            item.url = `${FLOTIQ_API_URL}${item.url}`
+          }
+        })
+        acc[key] = value
       }
+
+      return acc
     }
-  
-    return output
+
+    acc[key] = content[key]
+    return acc
+  }, {})
+
+  return result
+}
+
+export const normalize = (
+  content
+): {
+  meta: {
+    pagination?: {
+      total_count?: number
+      total_pages?: number
+      current_page?: number
+      count: number
+      hasNextPage: boolean
+      hasPrevPage: boolean
+    }
   }
-  
-  export const normalizeContent = (input) => {
-    if (
-      input === null ||
-      input === undefined ||
-      (typeof input === 'object' && !Object.keys(input).length)
-    ) {
-      return null
-    }
-  
-    if (Array.isArray(input)) {
-      return {
-        data: input.map(normalize),
-      }
-    }
-  
-    let output = { ...input }
-  
-    if (input.attributes) {
-      output = {
-        ...output,
-        ...normalizeNestedAttributes(input.attributes),
-      }
-      delete output.attributes
-    }
-  
-    if (input.data) {
-      output = normalizeContent(input.data)
-    }
-  
-    return output
-  }
-  
-  export const normalize = (
-    content
-  ): {
+  data: Array<unknown> | unknown
+} => {
+  const totalItemCount = content?.total_count
+  const totalPages = content?.total_pages
+  const currentPage = content?.current_page
+  const itemsPerPage = content?.count
+
+  const hasNextPage = currentPage < totalPages
+  const hasPrevPage = currentPage >= 2
+  const data = normalizeContent(content.data)
+  return {
     meta: {
-      pagination?: {
-        total?: number
-        limit?: number
-        start?: number
-        pages: number
-        page: number
-        hasNextPage: boolean
-        hasPrevPage: boolean
-      }
-    }
-    data: Array<unknown> | unknown
-  } => {
-    const total = content?.meta?.pagination?.total
-    const limit = content?.meta?.pagination?.limit
-    const start = content?.meta?.pagination?.start
-  
-    let pages = 0
-    let page = 1
-    if (total && limit) {
-      pages = Math.ceil(total / limit)
-    }
-  
-    if (start && limit) {
-      page = start / limit + 1
-    }
-  
-    const hasNextPage = page < pages
-    const hasPrevPage = page >= 2
-    return {
-      meta: {
-        ...content?.meta,
-        pagination: {
-          ...content?.meta?.pagination,
-          ...(!!pages && { pages }),
-          ...(!!page && { page }),
-          hasNextPage,
-          hasPrevPage,
-        },
+      ...content?.meta,
+      pagination: {
+        ...content?.meta?.pagination,
+        total_count: totalItemCount,
+        total_pages: totalPages,
+        current_page: currentPage,
+        count: itemsPerPage,
+        hasNextPage,
+        hasPrevPage,
       },
-      ...normalizeContent(content),
-    }
+    },
+    data,
   }
-  
+}
