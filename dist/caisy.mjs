@@ -28,7 +28,7 @@ const m = (e, t) => {
     },
     data: [c(t)]
   };
-}, c = (e) => Array.isArray(e) && !e.length ? [] : e == null ? e : typeof e == "object" && !Object.keys(e).length ? {} : Array.isArray(e) ? e.map((t) => c(t)) : Object.keys(e._meta || {})?.length ? { ...c(l(e)) } : typeof e == "object" && e.json && e.json.type === "doc" ? S(e) : Object.keys(e).reduce((t, s) => Array.isArray(e[s]) ? (t[s] = e[s].map((r) => c(r)), t) : typeof e[s] == "object" ? (t[s] = { ...c(l(e[s])) }, t) : (t[s] = e[s], t), {}), l = (e) => {
+}, c = (e) => Array.isArray(e) && !e.length ? [] : e == null ? e : typeof e == "object" && !Object.keys(e).length ? {} : Array.isArray(e) ? e.map((t) => c(t)) : Object.keys(e._meta || {})?.length ? { ...c(l(e)) } : typeof e == "object" && e.json && e.json.type === "doc" ? S(e) : Object.keys(e).reduce((t, s) => Array.isArray(e[s]) ? (t[s] = e[s].map((r) => c(r)), t) : typeof e[s] == "object" ? (t[s] = c(l(e[s])), t) : (t[s] = e[s], t), {}), l = (e) => {
   let t = e;
   return t?._meta && (t = {
     ...t,
