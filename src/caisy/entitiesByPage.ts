@@ -16,7 +16,8 @@ export const getEntitiesByPage = async (params: {
   perPage: string,
   after?: string
 }) => {
-  const { projectId, query, perPage, after = '' } = params
+  // restParams is used for sending the filter parameters for the query
+  const { projectId, query, perPage, after = '', page, ...restParams } = params
   const url = getAPIUrlByProjectId(projectId)
 
   const requestedPage = Number.parseInt(params['page'] ?? "1")
@@ -35,6 +36,7 @@ export const getEntitiesByPage = async (params: {
       variables: {
         first: firstParam,
         after,
+        ...restParams,
       }
     }),
   })
@@ -58,7 +60,8 @@ export const getEntitiesByPage = async (params: {
     projectId,
     query,
     perPage,
+    ...restParams,
     page: requestedPage.toString(),
-    after: endCursor
+    after: endCursor,
   })
 }
