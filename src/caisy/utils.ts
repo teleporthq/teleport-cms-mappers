@@ -93,7 +93,7 @@ const normalizeContent = (input: any) => {
     }
 
     if (typeof input[key] === 'object') {
-      acc[key] = {...normalizeContent(normaliseObject(input[key]))}
+      acc[key] = normalizeContent(normaliseObject(input[key]))
       return acc
     }
 
