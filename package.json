@@ -32,6 +32,11 @@
       "require": "./dist/wordpress.js",
       "types": "./dist/wordpress/index.d.ts"
     },
+    "./wordpress/revalidate": {
+      "import": "./dist/wordpress-revalidator.mjs",
+      "require": "./dist/wordpress-revalidator.js",
+      "types": "./dist/wordpress/revalidate.d.ts"
+    },
     "./caisy": {
       "import": "./dist/caisy.mjs",
       "require": "./dist/caisy.js",
@@ -42,10 +47,10 @@
       "require": "./dist/caisy-revalidator.js",
       "types": "./dist/caisy/revalidate.d.ts"
     },
-    "./wordpress/revalidate": {
-      "import": "./dist/wordpress-revalidator.mjs",
-      "require": "./dist/wordpress-revalidator.js",
-      "types": "./dist/wordpress/revalidate.d.ts"
+    "./flotiq": {
+      "import": "./dist/flotiq.mjs",
+      "require": "./dist/flotiq.js",
+      "types": "./dist/flotiq/index.d.ts"
     },
     ".": {
       "import": "./dist/contentful.mjs",
