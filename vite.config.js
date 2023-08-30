@@ -19,7 +19,7 @@ export default defineConfig({
         'strapi-revalidator': resolve(__dirname, "src/strapi/revalidate.ts"),
         'wordpress-revalidator': resolve(__dirname, "src/wordpress/revalidate.ts"),
         'caisy-revalidator': resolve(__dirname, "src/caisy/revalidate.ts"),
-        // 'flotiq-revalidator': resolve(__dirname, "src/flotiq/revalidate.ts"),
+        'flotiq-revalidator': resolve(__dirname, "src/flotiq/revalidate.ts"),
       },
       formats: ["es", "cjs"],
     }
