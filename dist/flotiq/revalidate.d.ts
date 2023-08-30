@@ -1,10 +1,10 @@
-import { WebHookHandler } from "types";
+import { OutputObject, WebHookHandler } from "types";
 interface FlotiqWebhookResponse {
     action: string;
     ref: string;
     webhookId: string;
     contentTypeName: string;
-    payload: Record<string, unknown>;
+    payload: OutputObject;
 }
 export declare const revalidate: WebHookHandler<FlotiqWebhookResponse, unknown>;
 export {};

@@ -1,4 +1,4 @@
-import { WebHookHandler } from "types"
+import { OutputObject, WebHookHandler } from "types"
 
 const SUPPORTED_EVENTS = ['Update', 'Create', 'Delete']
 
@@ -8,7 +8,7 @@ interface FlotiqWebhookResponse {
   webhookId: string
   contentTypeName: string
   // payload contains the id and all the updated information about the entity
-  payload: Record<string, unknown>
+  payload: OutputObject
 }
 
 export const revalidate: WebHookHandler<FlotiqWebhookResponse, unknown> = async (request, cb) => {
@@ -28,10 +28,8 @@ export const revalidate: WebHookHandler<FlotiqWebhookResponse, unknown> = async 
     throw new Error('Content type ID does not exist in the webhook response')
   }
 
-  const documentId = content.payload.id as string
-
   const data = {
-    id: documentId,
+    ...content.payload
   }
 
   cb(data, contentTypeId)
