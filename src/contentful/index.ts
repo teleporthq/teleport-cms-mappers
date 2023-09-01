@@ -33,6 +33,63 @@ const normalizeContent = (content) => {
   }, {})
 }
 
+// Max depth of 40 is a bit arbitrary, but it's a reasonable number that
+// should be enough to catch any circular references.
+function pruneDeep(obj, currentDepth = 0, maxDepth = 40) {
+  if (obj === null || typeof obj !== 'object') {
+    return obj
+  }
+
+  const clone = Array.isArray(obj) ? [] : {}
+
+  if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++) {
+      if (currentDepth < maxDepth) {
+        clone[i] = pruneDeep(obj[i], currentDepth + 1, maxDepth)
+      }
+    }
+    return clone
+  }
+
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      if (currentDepth < maxDepth) {
+        clone[key] = pruneDeep(obj[key], currentDepth + 1, maxDepth)
+      }
+    }
+  }
+
+  return clone
+}
+
+function exceedsMaxDepth(obj, max = 40, currentDepth = 0) {
+  if (currentDepth > max) {
+    return true
+  }
+
+  if (obj === null || typeof obj !== 'object') {
+    return false
+  }
+
+  if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++) {
+      if (exceedsMaxDepth(obj[i], max, currentDepth + 1)) {
+        return true
+      }
+    }
+  } else {
+    for (const key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        if (exceedsMaxDepth(obj[key], max, currentDepth + 1)) {
+          return true
+        }
+      }
+    }
+  }
+
+  return false
+}
+
 const normaliseObject = (content) => {
   let normalisedFields: Record<string, unknown> = {}
   let normalisedSys = {}
@@ -94,6 +151,11 @@ export const normalize = (
   const hasNextPage = page < pages
   const hasPrevPage = page >= 2
 
+  let resolvedContentFul = resolveContentfulResponse(content)
+  if (exceedsMaxDepth(resolvedContentFul)) {
+    resolvedContentFul = pruneDeep(resolvedContentFul)
+  }
+
   return {
     meta: {
       pagination: {
@@ -106,6 +168,6 @@ export const normalize = (
         pages,
       },
     },
-    data: normalizeContent(resolveContentfulResponse(content)),
+    data: normalizeContent(resolvedContentFul),
   }
 }
