@@ -84,20 +84,27 @@ const normalizeContent = (input: any) => {
   }
 
   return Object.keys(input).reduce((acc: Record<string, unknown>, key) => {
-    if (Array.isArray(input[key])) {
-      acc[key] = input[key].map((item: any[]) => {
+    const value = input[key]
+
+    if (value === null || value === undefined) {
+      acc[key] = value
+      return acc
+    }
+
+    if (Array.isArray(value)) {
+      acc[key] = value.map((item: any[]) => {
         return normalizeContent(item)
       })
 
       return acc
     }
 
-    if (typeof input[key] === 'object') {
-      acc[key] = normalizeContent(normaliseObject(input[key]))
+    if (typeof value === 'object') {
+      acc[key] = {...normalizeContent(normaliseObject(value))}
       return acc
     }
 
-    acc[key] = input[key]
+    acc[key] = value
     return acc
   }, {})
 }
