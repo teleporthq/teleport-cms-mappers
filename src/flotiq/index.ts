@@ -42,8 +42,8 @@ export const normalize = (
   meta: {
     pagination?: {
       total_count?: number
-      total_pages?: number
-      current_page?: number
+      pages?: number
+      page?: number
       count: number
       hasNextPage: boolean
       hasPrevPage: boolean
@@ -59,14 +59,15 @@ export const normalize = (
   const hasNextPage = currentPage < totalPages
   const hasPrevPage = currentPage >= 2
   const data = normalizeContent(content.data)
+
   return {
     meta: {
       ...content?.meta,
       pagination: {
         ...content?.meta?.pagination,
         total_count: totalItemCount,
-        total_pages: totalPages,
-        current_page: currentPage,
+        pages: totalPages,
+        page: currentPage,
         count: itemsPerPage,
         hasNextPage,
         hasPrevPage,

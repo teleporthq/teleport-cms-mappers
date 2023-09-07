@@ -11,8 +11,8 @@ const o = "https://api.flotiq.com", e = (r) => Array.isArray(r) ? r.map((t) => e
       pagination: {
         ...r?.meta?.pagination,
         total_count: l,
-        total_pages: t,
-        current_page: a,
+        pages: t,
+        page: a,
         count: s,
         hasNextPage: u,
         hasPrevPage: i
