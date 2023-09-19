@@ -36,10 +36,14 @@ const m = (e, t) => {
   return t?._meta && (t = {
     ...t,
     ...t._meta
-  }, delete t._meta), t?.__typename === "Asset" && (t = {
+  }, delete t._meta), t?.__typename === "Asset" ? (t = {
     ...t,
     ...b(t)
-  }), t;
+  }, t) : (t?.__typename && t.__typename !== "Asset" && (t = {
+    // typeId is used by the switch primitive to determine the content/component type of the item
+    typeId: t?.__typename,
+    ...t
+  }), t);
 }, b = (e) => ({
   id: e.id,
   name: e.title,
