@@ -125,7 +125,11 @@ const normaliseObject = (input) => {
       ...newData,
       ...normalizeAssetData(newData)
     }
-  } else {
+
+    return newData
+  }
+
+  if (newData?.__typename && newData.__typename !== 'Asset') {
     newData = {
       // typeId is used by the switch primitive to determine the content/component type of the item
       typeId: newData?.__typename,
