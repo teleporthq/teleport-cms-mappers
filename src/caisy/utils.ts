@@ -64,7 +64,7 @@ const normalizeContent = (input: any) => {
   }
 
   if (input === null || input === undefined) {
-    return input
+    return null
   }
 
   if (typeof input === 'object' && !Object.keys(input).length) {
@@ -87,7 +87,7 @@ const normalizeContent = (input: any) => {
     const value = input[key]
 
     if (value === null || value === undefined) {
-      acc[key] = value
+      acc[key] = null
       return acc
     }
 

@@ -28,10 +28,10 @@ const m = (e, t) => {
     },
     data: [c(t)]
   };
-}, c = (e) => Array.isArray(e) && !e.length ? [] : e == null ? e : typeof e == "object" && !Object.keys(e).length ? {} : Array.isArray(e) ? e.map((t) => c(t)) : Object.keys(e._meta || {})?.length ? { ...c(l(e)) } : typeof e == "object" && e.json && e.json.type === "doc" ? O(e) : Object.keys(e).reduce((t, r) => {
+}, c = (e) => Array.isArray(e) && !e.length ? [] : e == null ? null : typeof e == "object" && !Object.keys(e).length ? {} : Array.isArray(e) ? e.map((t) => c(t)) : Object.keys(e._meta || {})?.length ? { ...c(f(e)) } : typeof e == "object" && e.json && e.json.type === "doc" ? O(e) : Object.keys(e).reduce((t, r) => {
   const s = e[r];
-  return s == null ? (t[r] = s, t) : Array.isArray(s) ? (t[r] = s.map((n) => c(n)), t) : typeof s == "object" ? (t[r] = { ...c(l(s)) }, t) : (t[r] = s, t);
-}, {}), l = (e) => {
+  return s == null ? (t[r] = null, t) : Array.isArray(s) ? (t[r] = s.map((n) => c(n)), t) : typeof s == "object" ? (t[r] = { ...c(f(s)) }, t) : (t[r] = s, t);
+}, {}), f = (e) => {
   let t = e;
   return t?._meta && (t = {
     ...t,
@@ -68,7 +68,7 @@ const m = (e, t) => {
     }), r;
   }),
   type: e.json.type
-} : e.json, d = (e) => `https://cloud.caisy.io/api/v3/e/${e}/graphql`, g = async (e) => {
+} : e.json, d = (e) => `https://cloud.caisy.io/api/v3/e/${e}/graphql`, l = async (e) => {
   if (e.status === 401 || e.status === 403)
     throw new Error(
       `Caisy auth or permission issue: ${e.statusText}`
@@ -95,7 +95,7 @@ const m = (e, t) => {
     body: JSON.stringify({
       query: r
     })
-  }), a = await g(n);
+  }), a = await l(n);
   return m(a.data[Object.keys(a.data)[0]]);
 }, A = async (e) => {
   const { projectId: t, query: r, attribute: s } = e, n = d(t);
@@ -112,13 +112,13 @@ const m = (e, t) => {
           value: e?.[`${s}`] ?? ""
         }
       })
-    }), o = await g(a);
+    }), o = await l(a);
     return P(o);
   } catch (a) {
     throw new Error(a.message);
   }
 }, S = async (e) => {
-  const { projectId: t, query: r, perPage: s, after: n = "", page: a, ...o } = e, u = d(t), i = Number.parseInt(e.page ?? "1"), f = Number.parseInt(e.perPage ?? "10"), h = n ? f : (i > 1 ? i - 1 : i) * f, j = await fetch(u, {
+  const { projectId: t, query: r, perPage: s, after: n = "", page: a, ...o } = e, u = d(t), i = Number.parseInt(e.page ?? "1"), g = Number.parseInt(e.perPage ?? "10"), h = n ? g : (i > 1 ? i - 1 : i) * g, p = await fetch(u, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -132,17 +132,17 @@ const m = (e, t) => {
         ...o
       }
     })
-  }), y = await g(j);
+  }), y = await l(p);
   if (!y.data)
     return [];
-  const { endCursor: p, hasNextPage: C } = y.data[Object.keys(y.data)[0]].pageInfo;
+  const { endCursor: j, hasNextPage: C } = y.data[Object.keys(y.data)[0]].pageInfo;
   return i === 1 || !C || n ? m(y.data[Object.keys(y.data)[0]], i.toString()) : await S({
     projectId: t,
     query: r,
     perPage: s,
     ...o,
     page: i.toString(),
-    after: p
+    after: j
   });
 };
 export {
