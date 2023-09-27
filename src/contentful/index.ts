@@ -92,7 +92,7 @@ function exceedsMaxDepth(obj, max = 40, currentDepth = 0) {
 
 const normaliseObject = (content) => {
   let normalisedFields: Record<string, unknown> = {}
-  let normalisedSys = {}
+  let normalisedSys: Record<string, unknown> = {}
   let normalisedFile = {}
 
   if (content.fields) {
@@ -108,7 +108,16 @@ const normaliseObject = (content) => {
 
   if (content.sys) {
     normalisedSys = normalizeContent(content.sys)
+
+    // if contentType exists we need to know what type it is in order to use this in the switch component
+    if (normalisedSys.contentType?.id) {
+      normalisedSys = {
+        ...normalisedSys,
+        typeId: normalisedSys.contentType.id
+      }
+    }
   }
+
 
   if (content.file) {
     normalisedFile = { ...normalisedFile, ...normalizeContent(content.file) }
