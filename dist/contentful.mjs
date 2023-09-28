@@ -1,4 +1,4 @@
-var M = Function.prototype.toString, m = Object.create, C = Object.defineProperty, B = Object.getOwnPropertyDescriptor, S = Object.getOwnPropertyNames, w = Object.getOwnPropertySymbols, R = Object.getPrototypeOf, I = Object.prototype, T = I.hasOwnProperty, z = I.propertyIsEnumerable, L = typeof w == "function", U = typeof WeakMap == "function", W = function() {
+var M = Function.prototype.toString, m = Object.create, C = Object.defineProperty, T = Object.getOwnPropertyDescriptor, S = Object.getOwnPropertyNames, w = Object.getOwnPropertySymbols, B = Object.getPrototypeOf, I = Object.prototype, R = I.hasOwnProperty, z = I.propertyIsEnumerable, L = typeof w == "function", U = typeof WeakMap == "function", W = function() {
   if (U)
     return function() {
       return /* @__PURE__ */ new WeakMap();
@@ -22,7 +22,7 @@ var M = Function.prototype.toString, m = Object.create, C = Object.definePropert
     return new e();
   };
 }(), b = function(e, r) {
-  var t = e.__proto__ || R(e);
+  var t = e.__proto__ || B(e);
   if (!t)
     return m(null);
   var n = t.constructor;
@@ -38,7 +38,7 @@ var M = Function.prototype.toString, m = Object.create, C = Object.definePropert
   var f = b(e, r);
   n.set(e, f);
   for (var s in e)
-    T.call(e, s) && (f[s] = t(e[s], n));
+    R.call(e, s) && (f[s] = t(e[s], n));
   if (L)
     for (var i = w(e), o = 0, l = i.length, a = void 0; o < l; ++o)
       a = i[o], z.call(e, a) && (f[a] = t(e[a], n));
@@ -48,7 +48,7 @@ var M = Function.prototype.toString, m = Object.create, C = Object.definePropert
   n.set(e, f);
   for (var s = L ? S(e).concat(w(e)) : S(e), i = 0, o = s.length, l = void 0, a = void 0; i < o; ++i)
     if (l = s[i], l !== "callee" && l !== "caller")
-      if (a = B(e, l), a) {
+      if (a = T(e, l), a) {
         !a.get && !a.set && (a.value = t(e[l], n));
         try {
           C(f, l, a);
@@ -266,7 +266,10 @@ const P = (e) => {
   return e.fields && (r = y(e.fields), r.file && (n = {
     ...n,
     ...y(r.file)
-  })), e.sys && (t = y(e.sys)), e.file && (n = { ...n, ...y(e.file) }), {
+  })), e.sys && (t = y(e.sys), t.contentType?.id && (t = {
+    ...t,
+    typeId: t.contentType.id
+  })), e.file && (n = { ...n, ...y(e.file) }), {
     ...r,
     ...t,
     ...n,
