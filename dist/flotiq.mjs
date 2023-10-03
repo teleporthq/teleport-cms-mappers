@@ -1,27 +1,42 @@
-const o = "https://api.flotiq.com", e = (r) => Array.isArray(r) ? r.map((t) => e(t)) : typeof r != "object" ? r : Object.keys(r).reduce((t, a) => {
-  const s = r[a];
-  return Array.isArray(s) ? (s.length === 1 ? (t[a] = s[0], r[a][0].url && (t[a].url = `${o}${r[a][0].url}`)) : (s.forEach((u) => {
-    u.url && (u.url = `${o}${u.url}`);
-  }), t[a] = s), t) : (t[a] = r[a], t);
+const o = "https://api.flotiq.com", t = (r) => Array.isArray(r) ? r.length === 0 ? {} : r.length === 1 && (r[0].url || r[0].dataUrl) ? l(r[0]) : r.map((e) => t(e)) : typeof r != "object" ? r : Object.keys(r.internal || {})?.length ? { ...t(p(r)) } : r.url || r.dataUrl ? l(r) : Object.keys(r).reduce((e, s) => {
+  const i = r[s];
+  return e[s] = t(i), e;
 }, {}), p = (r) => {
-  const l = r?.total_count, t = r?.total_pages, a = r?.current_page, s = r?.count, u = a < t, i = a >= 2, g = e(r.data);
+  let a = r;
+  return a?.internal && (a = {
+    ...a,
+    ...a.internal
+  }, delete a.internal), a;
+}, l = (r) => r ? r.dataUrl ? {
+  url: r.dataUrl
+} : {
+  id: r.id,
+  url: `${o}/${r.url}`,
+  size: {
+    width: r.width,
+    height: r.height
+  },
+  assetType: r.mimeType,
+  name: r.fileName
+} : {}, d = (r) => {
+  const a = r?.total_count, e = r?.total_pages, s = r?.current_page, i = r?.count, u = s < e, g = s >= 2, m = t(r.data);
   return {
     meta: {
       ...r?.meta,
       pagination: {
         ...r?.meta?.pagination,
-        total_count: l,
-        pages: t,
-        page: a,
-        count: s,
+        total_count: a,
+        pages: e,
+        page: s,
+        count: i,
         hasNextPage: u,
-        hasPrevPage: i
+        hasPrevPage: g
       }
     },
-    data: g
+    data: m
   };
 };
 export {
-  p as normalize,
-  e as normalizeContent
+  d as normalize,
+  t as normalizeContent
 };
