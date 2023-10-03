@@ -1,1 +1,1 @@
-{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../src/flotiq/index.ts"],"names":[],"mappings":"AAEA,eAAO,MAAM,gBAAgB,uBAuC5B,CAAA;AAuCD,eAAO,MAAM,SAAS;;;0BAKF,MAAM;oBACZ,MAAM;mBACP,MAAM;mBACN,MAAM;yBACA,OAAO;yBACP,OAAO;;;UAGlB,MAAM,OAAO,CAAC,GAAG,OAAO;CA0B/B,CAAA"}
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../src/flotiq/index.ts"],"names":[],"mappings":"AAEA,eAAO,MAAM,gBAAgB,uBAuC5B,CAAA;AAwCD,eAAO,MAAM,SAAS;;;0BAKF,MAAM;oBACZ,MAAM;mBACP,MAAM;mBACN,MAAM;yBACA,OAAO;yBACP,OAAO;;;UAGlB,MAAM,OAAO,CAAC,GAAG,OAAO;CA0B/B,CAAA"}

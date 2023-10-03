@@ -1,17 +1,19 @@
-const o = "https://api.flotiq.com", t = (r) => Array.isArray(r) ? r.length === 0 ? {} : r.length === 1 && (r[0].url || r[0].dataUrl) ? l(r[0]) : r.map((e) => t(e)) : typeof r != "object" ? r : Object.keys(r.internal || {})?.length ? { ...t(p(r)) } : r.url || r.dataUrl ? l(r) : Object.keys(r).reduce((e, s) => {
-  const i = r[s];
-  return e[s] = t(i), e;
-}, {}), p = (r) => {
+const m = "https://api.flotiq.com", s = (r) => Array.isArray(r) ? r.length === 0 ? {} : r.length === 1 && (r[0].url || r[0].dataUrl) ? l(r[0]) : r.map((e) => s(e)) : typeof r != "object" ? r : Object.keys(r.internal || {})?.length ? { ...s(o(r)) } : r.url || r.dataUrl ? l(r) : Object.keys(r).reduce((e, t) => {
+  const i = r[t];
+  return e[t] = s(i), e;
+}, {}), o = (r) => {
   let a = r;
   return a?.internal && (a = {
     ...a,
-    ...a.internal
+    ...a.internal,
+    typeId: a.internal.contentType
+    // used for cms mixed type
   }, delete a.internal), a;
 }, l = (r) => r ? r.dataUrl ? {
   url: r.dataUrl
 } : {
   id: r.id,
-  url: `${o}/${r.url}`,
+  url: `${m}/${r.url}`,
   size: {
     width: r.width,
     height: r.height
@@ -19,7 +21,7 @@ const o = "https://api.flotiq.com", t = (r) => Array.isArray(r) ? r.length === 0
   assetType: r.mimeType,
   name: r.fileName
 } : {}, d = (r) => {
-  const a = r?.total_count, e = r?.total_pages, s = r?.current_page, i = r?.count, u = s < e, g = s >= 2, m = t(r.data);
+  const a = r?.total_count, e = r?.total_pages, t = r?.current_page, i = r?.count, u = t < e, g = t >= 2, p = s(r.data);
   return {
     meta: {
       ...r?.meta,
@@ -27,16 +29,16 @@ const o = "https://api.flotiq.com", t = (r) => Array.isArray(r) ? r.length === 0
         ...r?.meta?.pagination,
         total_count: a,
         pages: e,
-        page: s,
+        page: t,
         count: i,
         hasNextPage: u,
         hasPrevPage: g
       }
     },
-    data: m
+    data: p
   };
 };
 export {
   d as normalize,
-  t as normalizeContent
+  s as normalizeContent
 };

@@ -48,6 +48,7 @@ const normalizeObject = (entityValue: Record<string, unknown>) => {
     newData = {
       ...newData,
       ...newData.internal,
+      typeId: newData.internal.contentType, // used for cms mixed type
     }
 
     delete newData.internal
