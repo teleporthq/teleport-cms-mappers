@@ -31,6 +31,11 @@ export const normalizeContent = (content) => {
     return mapAssetDetails(content)
   }
 
+  if (content.blocks) {
+    // it is a field block, we're ignoring it for now
+    return {}
+  }
+
   const result = Object.keys(content).reduce((acc, key) => {
     const value = content[key]
     acc[key] = normalizeContent(value)
