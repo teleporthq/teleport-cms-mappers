@@ -33,9 +33,9 @@ const normalizeContent = (content) => {
   }, {})
 }
 
-// Max depth of 4 is a bit arbitrary, but it's a reasonable number that
-// should be enough to catch most circular references without going too high on the exponential growth of circular references.
-function pruneDeep(obj, currentDepth = 0, maxDepth = 4) {
+// Max depth of 40 is a bit arbitrary, but it's a reasonable number that
+// should be enough to catch any circular references.
+function pruneDeep(obj, currentDepth = 0, maxDepth = 40) {
   if (obj === null || typeof obj !== 'object') {
     return obj
   }
@@ -62,7 +62,7 @@ function pruneDeep(obj, currentDepth = 0, maxDepth = 4) {
   return clone
 }
 
-function exceedsMaxDepth(obj, max = 4, currentDepth = 0) {
+function exceedsMaxDepth(obj, max = 40, currentDepth = 0) {
   if (currentDepth > max) {
     return true
   }
