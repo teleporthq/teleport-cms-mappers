@@ -4,4 +4,5 @@ export { getEntitiesByPage as getEntitiesWithPagination } from "./entitiesByPage
 export { normalizeList as normalizeCaisyListContent } from "./utils";
 export { normalizeItem as normalizeCaisyItemContent } from "./utils";
 export { normalizeAssetData as normalizeCaisyAssetData } from "./utils";
+export { getSingleEntity as getSingleEntityType } from "./singleEntity";
 //# sourceMappingURL=index.d.ts.map
