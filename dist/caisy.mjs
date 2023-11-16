@@ -85,7 +85,7 @@ const l = (e, t) => {
       )}`
     );
   return t;
-}, w = async (e) => {
+}, A = async (e) => {
   const { projectId: t, query: s } = e, r = d(t), n = await fetch(r, {
     method: "POST",
     headers: {
@@ -144,7 +144,7 @@ const l = (e, t) => {
     page: i.toString(),
     after: j
   });
-}, A = async (e) => {
+}, E = async (e) => {
   const { projectId: t, query: s } = e, r = d(t), n = await fetch(r, {
     method: "POST",
     headers: {
@@ -154,23 +154,26 @@ const l = (e, t) => {
     body: JSON.stringify({
       query: s
     })
-  }), a = await g(n);
-  let o = a.data[Object.keys(a.data)[0]];
-  return o = {
+  }), a = await g(n), o = a.data[Object.keys(a.data)[0]];
+  return w(o);
+}, w = (e) => {
+  const t = {
     pageInfo: {},
     edges: [
       {
-        node: { ...o }
+        node: { ...e }
       }
     ]
-  }, l(o);
+  };
+  return l(t);
 };
 export {
-  w as getEntities,
+  A as getEntities,
   P as getEntitiesWithPagination,
   _ as getEntityByAttribute,
-  A as getSingleEntityType,
+  E as getSingleEntityType,
   O as normalizeCaisyAssetData,
   C as normalizeCaisyItemContent,
-  l as normalizeCaisyListContent
+  l as normalizeCaisyListContent,
+  w as normalizeSingleTypeAsList
 };

@@ -16,13 +16,18 @@ export const getSingleEntity = async (params: { projectId: string; query: string
   })
 
   const responseJSON = await handleFetchResponse(response)
-  let responseData = responseJSON.data[Object.keys(responseJSON.data)[0]]
+  const responseData = responseJSON.data[Object.keys(responseJSON.data)[0]]
 
-  responseData = {
+  return normalizeSingleTypeAsList(responseData)
+}
+
+export const normalizeSingleTypeAsList = (input: any) => {
+  // here we are builing the response similar to a get list of entities response, in order to use the same normalize function
+  const responseData = {
     pageInfo: {},
     edges: [
       {
-        node: { ...responseData },
+        node: { ...input },
       },
     ],
   }
