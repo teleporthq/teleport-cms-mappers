@@ -233,7 +233,7 @@ var p = {}, Y = function(r) {
   }), n.items;
 };
 const y = (e) => Array.isArray(e) ? e.map((r) => y(r)) : typeof e != "object" ? e : Object.keys(e.fields || {})?.length && Object.keys(e.sys || {})?.length ? P(e) : Object.keys(e).reduce((r, t) => Array.isArray(e[t]) ? (r[t] = e[t].map((n) => y(n)), r) : typeof e[t] == "object" ? (r[t] = { ...P(e[t]) }, r) : (r[t] = e[t], r), {});
-function k(e, r = 0, t = 4) {
+function k(e, r = 0, t = 12) {
   if (e === null || typeof e != "object")
     return e;
   const n = Array.isArray(e) ? [] : {};
@@ -246,7 +246,7 @@ function k(e, r = 0, t = 4) {
     Object.prototype.hasOwnProperty.call(e, f) && r < t && (n[f] = k(e[f], r + 1, t));
   return n;
 }
-function A(e, r = 4, t = 0) {
+function A(e, r = 12, t = 0) {
   if (t > r)
     return !0;
   if (e === null || typeof e != "object")
