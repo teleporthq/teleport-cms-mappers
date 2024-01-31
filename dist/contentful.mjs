@@ -1,7 +1,7 @@
 const u = (s) => {
   const i = Object.keys(s.includes || {}).reduce(
-    (e, t) => (s.includes[t].forEach((a) => {
-      e[a.sys.id] = a;
+    (e, t) => (s.includes[t].forEach((o) => {
+      e[o.sys.id] = o;
     }), e),
     {}
   ), r = [...s.items].filter(
@@ -16,41 +16,41 @@ const u = (s) => {
 }, l = (s, i, r, e) => {
   const t = JSON.parse(JSON.stringify(s));
   return Object.keys(t.fields).forEach((f) => {
-    const a = t.fields[f];
-    if (Array.isArray(a))
-      return t.fields[f] = a.map((o) => o.sys && o.sys.type === "Link" ? p(o, i, r, e + 1) : o), [];
-    if (a.nodeType === "document" && a.content.length > 0) {
-      t.fields[f].content = a.content.map((o) => {
-        if (o.nodeType === "embedded-asset-block") {
-          const m = p(
-            o.data.target,
+    const o = t.fields[f];
+    if (Array.isArray(o))
+      return t.fields[f] = o.map((a) => a.sys && a.sys.type === "Link" ? y(a, i, r, e + 1) : a), [];
+    if (o.nodeType === "document" && o.content.length > 0) {
+      t.fields[f].content = o.content.map((a) => {
+        if (a.nodeType === "embedded-asset-block") {
+          const m = y(
+            a.data.target,
             i,
             r,
             e + 1
           );
           return {
-            ...o,
+            ...a,
             data: {
-              ...o.data,
+              ...a.data,
               target: m
             }
           };
         }
-        return o;
+        return a;
       });
       return;
     }
-    if (!a.sys) {
-      t.fields[f] = a;
+    if (!o.sys) {
+      t.fields[f] = o;
       return;
     }
-    if (a.sys.type === "Link") {
-      t.fields[f] = p(a, i, r, e + 1);
+    if (o.sys.type === "Link") {
+      t.fields[f] = y(o, i, r, e + 1);
       return;
     }
-    return a;
+    return o;
   }), t;
-}, p = (s, i, r, e) => {
+}, y = (s, i, r, e) => {
   if (s.sys.linkType === "Asset")
     return i[s.sys.id] ?? s;
   if (s.sys.linkType === "Entry") {
@@ -59,15 +59,16 @@ const u = (s) => {
     const t = i[s.sys.id];
     return t ? l(t, i, r, e) : s;
   }
-}, d = (s) => Array.isArray(s) ? s.map((i) => d(i)) : typeof s != "object" ? s : Object.keys(s.fields || {})?.length && Object.keys(s.sys || {})?.length ? y(s) : Object.keys(s).reduce((i, r) => Array.isArray(s[r]) ? (i[r] = s[r].map((e) => d(e)), i) : typeof s[r] == "object" ? (i[r] = { ...y(s[r]) }, i) : (i[r] = s[r], i), {}), y = (s) => {
+  return s;
+}, p = (s) => Array.isArray(s) ? s.map((i) => p(i)) : typeof s != "object" ? s : Object.keys(s.fields || {})?.length && Object.keys(s.sys || {})?.length ? d(s) : Object.keys(s).reduce((i, r) => Array.isArray(s[r]) ? (i[r] = s[r].map((e) => p(e)), i) : typeof s[r] == "object" ? (i[r] = { ...d(s[r]) }, i) : (i[r] = s[r], i), {}), d = (s) => {
   let i = {}, r = {}, e = {};
-  s.fields && (i = d(s.fields), i.file && (e = {
+  s.fields && (i = p(s.fields), i.file && (e = {
     ...e,
-    ...d(i.file)
-  })), s.sys && (r = d(s.sys), r.contentType?.id && (r = {
+    ...p(i.file)
+  })), s.sys && (r = p(s.sys), r.contentType?.id && (r = {
     ...r,
     typeId: r.contentType.id
-  })), s.file && (e = { ...e, ...d(s.file) });
+  })), s.file && (e = { ...e, ...p(s.file) });
   const t = {
     ...i,
     ...r,
@@ -91,7 +92,7 @@ const u = (s) => {
         pages: i
       }
     },
-    data: d(f)
+    data: p(f)
   };
 };
 export {

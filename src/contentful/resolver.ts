@@ -129,5 +129,7 @@ const resolvedLinkedEntries = (
     // if item is not found, return the original object
     return fieldValue
   }
+
+  return fieldValue
 }
 
