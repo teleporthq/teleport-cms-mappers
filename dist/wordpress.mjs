@@ -1,5 +1,4 @@
-import { c as k } from "./_commonjsHelpers-10dfc225.mjs";
-var v = { exports: {} };
+var k = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {}, v = { exports: {} };
 /*! https://mths.be/he v1.2.0 by @mathias | MIT license */
 v.exports;
 (function(a, D) {
@@ -127,7 +126,7 @@ const I = (a) => {
     } catch {
     }
   return D;
-}, tu = async (a, D) => {
+}, au = async (a, D) => {
   const l = Object.fromEntries(a.headers.entries()), i = await a.json();
   let n = parseInt(D.page);
   (!n || isNaN(n)) && (n = 1);
@@ -146,6 +145,6 @@ const I = (a) => {
   };
 };
 export {
-  tu as normalize,
+  au as normalize,
   I as normalizeContent
 };

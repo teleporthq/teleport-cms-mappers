@@ -1,6 +1,4 @@
 
-import cloneDeep from 'lodash.clonedeep'
-
 const NESTING_LIMIT = 4
 
 export const resolveResponseCustom = (response) => {
@@ -41,7 +39,7 @@ const resolveItem = (
   nestingLimit: number,
   nesting: number
 ) => {
-  const item = cloneDeep(originalItem)
+  const item = JSON.parse(JSON.stringify(originalItem))
 
   Object.keys(item.fields).forEach((key: string) => {
     const fieldValue = item.fields[key]
