@@ -1,4 +1,3 @@
-
 const NESTING_LIMIT = 4
 
 export const resolveResponseCustom = (response) => {
@@ -16,9 +15,7 @@ export const resolveResponseCustom = (response) => {
   )
 
   // more like a safe-check inspired from the official library for all the items
-  const responseItems = [...response.items].filter((entity) =>
-    Boolean(entity.sys)
-  )
+  const responseItems = [...response.items].filter((entity) => Boolean(entity.sys))
 
   // some linked entities will exist only in the items array and won't exist in the includes response, but we need to find and resolve them too
   responseItems.forEach((item) => {
@@ -44,18 +41,6 @@ const resolveItem = (
   Object.keys(item.fields).forEach((key: string) => {
     const fieldValue = item.fields[key]
 
-    // array of items
-    if (Array.isArray(fieldValue)) {
-      item.fields[key] = fieldValue.map((fieldValueItem) => {
-        if (fieldValueItem.sys && fieldValueItem.sys.type === 'Link') {
-          return resolvedLinkedEntries(fieldValueItem, allIncludes, nestingLimit, nesting + 1)
-        }
-
-        return fieldValueItem
-      })
-      return []
-    }
-
     // rich text content field
     if (fieldValue.nodeType === 'document' && fieldValue.content.length > 0) {
       item.fields[key].content = fieldValue.content.map((fieldValueItem) => {
@@ -65,7 +50,7 @@ const resolveItem = (
             fieldValueItem.data.target,
             allIncludes,
             nestingLimit,
-            nesting + 1,
+            nesting + 1
           )
 
           const newData = {
@@ -83,6 +68,18 @@ const resolveItem = (
       })
 
       return
+    }
+
+    // array of items
+    if (Array.isArray(fieldValue)) {
+      item.fields[key] = fieldValue.map((fieldValueItem) => {
+        if (fieldValueItem.sys && fieldValueItem.sys.type === 'Link') {
+          return resolvedLinkedEntries(fieldValueItem, allIncludes, nestingLimit, nesting + 1)
+        }
+
+        return fieldValueItem
+      })
+      return []
     }
 
     if (!fieldValue.sys) {
@@ -108,7 +105,6 @@ const resolvedLinkedEntries = (
   nestingLimit: number,
   nesting: number
 ) => {
-
   // if it has an asset link, we find the asset in the includes response and return it
   if (fieldValue.sys.linkType === 'Asset') {
     const resolvedItem = allIncludes[fieldValue.sys.id]
@@ -132,4 +128,3 @@ const resolvedLinkedEntries = (
 
   return fieldValue
 }
-

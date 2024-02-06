@@ -4,9 +4,7 @@ const u = (s) => {
       e[o.sys.id] = o;
     }), e),
     {}
-  ), r = [...s.items].filter(
-    (e) => !!e.sys
-  );
+  ), r = [...s.items].filter((e) => !!e.sys);
   return r.forEach((e) => {
     i[e.sys.id] = e;
   }), r.map((e) => {
@@ -17,8 +15,6 @@ const u = (s) => {
   const t = JSON.parse(JSON.stringify(s));
   return Object.keys(t.fields).forEach((f) => {
     const o = t.fields[f];
-    if (Array.isArray(o))
-      return t.fields[f] = o.map((a) => a.sys && a.sys.type === "Link" ? y(a, i, r, e + 1) : a), [];
     if (o.nodeType === "document" && o.content.length > 0) {
       t.fields[f].content = o.content.map((a) => {
         if (a.nodeType === "embedded-asset-block") {
@@ -40,6 +36,8 @@ const u = (s) => {
       });
       return;
     }
+    if (Array.isArray(o))
+      return t.fields[f] = o.map((a) => a.sys && a.sys.type === "Link" ? y(a, i, r, e + 1) : a), [];
     if (!o.sys) {
       t.fields[f] = o;
       return;
