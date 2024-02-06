@@ -1,4 +1,4 @@
-import resolveContentfulResponse from 'contentful-resolve-response'
+import { resolveResponseCustom } from './resolver'
 
 const normalizeContent = (content) => {
   if (Array.isArray(content)) {
@@ -33,63 +33,6 @@ const normalizeContent = (content) => {
   }, {})
 }
 
-// Max depth of 12 is a bit arbitrary, but it's a reasonable number that should be enough
-// to catch most circular references while also not going too highly exponential when there are many of them.
-function pruneDeep(obj, currentDepth = 0, maxDepth = 12) {
-  if (obj === null || typeof obj !== 'object') {
-    return obj
-  }
-
-  const clone = Array.isArray(obj) ? [] : {}
-
-  if (Array.isArray(obj)) {
-    for (let i = 0; i < obj.length; i++) {
-      if (currentDepth < maxDepth) {
-        clone[i] = pruneDeep(obj[i], currentDepth + 1, maxDepth)
-      }
-    }
-    return clone
-  }
-
-  for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      if (currentDepth < maxDepth) {
-        clone[key] = pruneDeep(obj[key], currentDepth + 1, maxDepth)
-      }
-    }
-  }
-
-  return clone
-}
-
-function exceedsMaxDepth(obj, max = 12, currentDepth = 0) {
-  if (currentDepth > max) {
-    return true
-  }
-
-  if (obj === null || typeof obj !== 'object') {
-    return false
-  }
-
-  if (Array.isArray(obj)) {
-    for (let i = 0; i < obj.length; i++) {
-      if (exceedsMaxDepth(obj[i], max, currentDepth + 1)) {
-        return true
-      }
-    }
-  } else {
-    for (const key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        if (exceedsMaxDepth(obj[key], max, currentDepth + 1)) {
-          return true
-        }
-      }
-    }
-  }
-
-  return false
-}
-
 const normaliseObject = (content) => {
   let normalisedFields: Record<string, unknown> = {}
   let normalisedSys: Record<string, unknown> = {}
@@ -122,12 +65,16 @@ const normaliseObject = (content) => {
     normalisedFile = { ...normalisedFile, ...normalizeContent(content.file) }
   }
 
-  return {
+  const response = {
     ...normalisedFields,
     ...normalisedSys,
     ...normalisedFile,
     ...content,
   }
+
+  delete response.fields
+
+  return response
 }
 
 export const normalize = (
@@ -159,10 +106,7 @@ export const normalize = (
   const hasNextPage = page < pages
   const hasPrevPage = page >= 2
 
-  let resolvedContentFul = resolveContentfulResponse(content)
-  if (exceedsMaxDepth(resolvedContentFul)) {
-    resolvedContentFul = pruneDeep(resolvedContentFul)
-  }
+  const resolvedContentFul = resolveResponseCustom(content)
 
   return {
     meta: {
