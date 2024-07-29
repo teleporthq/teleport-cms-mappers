@@ -1,23 +1,22 @@
-function l(t) {
+const l = (t) => {
   if (typeof t != "object" || t === null)
     return t;
   const a = {};
-  for (const i in t)
-    a[i] = l(t[i]);
+  for (const r in t)
+    a[r] = l(t[r]);
   return a;
-}
-const d = (t) => {
+}, s = (t) => {
   const a = {};
-  for (const i in t) {
-    const e = t[i];
+  for (const r in t) {
+    const e = t[r];
     if (typeof e == "object" && e !== null && "data" in e && e.data !== null && "id" in e.data && "attributes" in e.data) {
-      const n = o(e);
-      a[i] = { id: e.data.id, ...n };
+      const i = n(e);
+      a[r] = { id: e.data.id, ...i };
     } else
-      a[i] = l(e);
+      Array.isArray(e) ? a[r] = e.map((i) => s(i)) : a[r] = l(e);
   }
   return a;
-}, o = (t) => {
+}, n = (t) => {
   if (t == null || typeof t == "object" && !Object.keys(t).length)
     return null;
   if (Array.isArray(t))
@@ -27,28 +26,29 @@ const d = (t) => {
   let a = { ...t };
   return t.attributes && (a = {
     ...a,
-    ...d(t.attributes)
-  }, delete a.attributes), t.data && (a = o(t.data)), a;
+    ...s(t.attributes)
+  }, delete a.attributes), t.data && (a = n(t.data)), a;
 }, f = (t) => {
-  const a = t?.meta?.pagination?.total, i = t?.meta?.pagination?.limit, e = t?.meta?.pagination?.start;
-  let n = 0, r = 1;
-  a && i && (n = Math.ceil(a / i)), e && i && (r = e / i + 1);
-  const s = r < n, c = r >= 2;
+  const a = t?.meta?.pagination?.total, r = t?.meta?.pagination?.limit, e = t?.meta?.pagination?.start;
+  let i = 0, o = 1;
+  a && r && (i = Math.ceil(a / r)), e && r && (o = Math.floor(e / r) + 1);
+  const d = o < i, c = o >= 2;
   return {
     meta: {
       ...t?.meta,
       pagination: {
         ...t?.meta?.pagination,
-        ...!!n && { pages: n },
-        ...!!r && { page: r },
-        hasNextPage: s,
+        ...i && { pages: i },
+        ...o && { page: o },
+        hasNextPage: d,
         hasPrevPage: c
       }
     },
-    ...o(t)
+    data: n(t.data)
   };
 };
 export {
   f as normalize,
-  o as normalizeContent
+  n as normalizeContent,
+  s as normalizeNestedAttributes
 };
