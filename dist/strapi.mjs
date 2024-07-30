@@ -21,7 +21,7 @@ const l = (t) => {
     return null;
   if (Array.isArray(t))
     return {
-      data: t.map(f)
+      data: t.map(n)
     };
   let a = { ...t };
   return t.attributes && (a = {

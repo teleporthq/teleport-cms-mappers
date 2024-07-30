@@ -1,6 +1,6 @@
 {
   "name": "@teleporthq/cms-mappers",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "main": "dist/index.js",
   "module": "dist/contentful.mjs",
   "types": "dist/contentful/index.d.ts",

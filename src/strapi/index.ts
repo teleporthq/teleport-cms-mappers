@@ -8,17 +8,6 @@ type Pagination = {
   hasPrevPage?: boolean
 }
 
-type Meta = {
-  pagination?: Pagination
-}
-
-type ContentData = {
-  id?: string
-  attributes?: Record<string, unknown>
-  data?: ContentData | ContentData[]
-  meta?: Meta
-}
-
 type NormalizedContent = {
   meta: {
     pagination?: Pagination
@@ -81,7 +70,7 @@ export const normalizeContent = (input: any): any => {
 
   if (Array.isArray(input)) {
     return {
-      data: input.map(normalize),
+      data: input.map(normalizeContent),
     }
   }
 
