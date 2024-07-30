@@ -109,7 +109,6 @@
     "vite-plugin-eslint": "^1.8.1"
   },
   "dependencies": {
-    "contentful-resolve-response": "^1.7.0",
     "he": "^1.2.0"
   }
 }
