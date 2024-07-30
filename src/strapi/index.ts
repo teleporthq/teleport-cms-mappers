@@ -109,10 +109,10 @@ export const normalize = (content: any): NormalizedContent => {
   const hasNextPage = page < pages
   const hasPrevPage = page >= 2
 
-  const normalizedContent = normalizeContent(content.data)
+  let normalizedContent = normalizeContent(content.data)
   // We need to make sure that we do not have nested data.data
-  if (Array.isArray(normalizedContent?.data?.data)) {
-    normalizedContent.data = normalizedContent.data.data
+  if (normalizedContent.data) {
+    normalizedContent = normalizedContent.data
   }
 
   return {
@@ -126,6 +126,6 @@ export const normalize = (content: any): NormalizedContent => {
         hasPrevPage,
       },
     },
-    data: normalizeContent(content.data),
+    data: normalizedContent,
   }
 }
