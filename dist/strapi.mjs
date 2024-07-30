@@ -1,54 +1,54 @@
-const l = (t) => {
-  if (typeof t != "object" || t === null)
-    return t;
-  const a = {};
-  for (const r in t)
-    a[r] = l(t[r]);
-  return a;
-}, s = (t) => {
-  const a = {};
-  for (const r in t) {
-    const e = t[r];
+const s = (a) => {
+  if (typeof a != "object" || a === null)
+    return a;
+  const t = {};
+  for (const r in a)
+    t[r] = s(a[r]);
+  return t;
+}, d = (a) => {
+  const t = {};
+  for (const r in a) {
+    const e = a[r];
     if (typeof e == "object" && e !== null && "data" in e && e.data !== null && "id" in e.data && "attributes" in e.data) {
       const i = n(e);
-      a[r] = { id: e.data.id, ...i };
+      t[r] = { id: e.data.id, ...i };
     } else
-      Array.isArray(e) ? a[r] = e.map((i) => s(i)) : a[r] = l(e);
+      Array.isArray(e) ? t[r] = e.map((i) => d(i)) : t[r] = s(e);
   }
-  return a;
-}, n = (t) => {
-  if (t == null || typeof t == "object" && !Object.keys(t).length)
+  return t;
+}, n = (a) => {
+  if (a == null || typeof a == "object" && !Object.keys(a).length)
     return null;
-  if (Array.isArray(t))
+  if (Array.isArray(a))
     return {
-      data: t.map(n)
+      data: a.map(n)
     };
-  let a = { ...t };
-  return t.attributes && (a = {
-    ...a,
-    ...s(t.attributes)
-  }, delete a.attributes), t.data && (a = n(t.data)), a;
-}, f = (t) => {
-  const a = t?.meta?.pagination?.total, r = t?.meta?.pagination?.limit, e = t?.meta?.pagination?.start;
+  let t = { ...a };
+  return a.attributes && (t = {
+    ...t,
+    ...d(a.attributes)
+  }, delete t.attributes), a.data && (t = n(a.data)), t;
+}, m = (a) => {
+  const t = a?.meta?.pagination?.total, r = a?.meta?.pagination?.limit, e = a?.meta?.pagination?.start;
   let i = 0, o = 1;
-  a && r && (i = Math.ceil(a / r)), e && r && (o = Math.floor(e / r) + 1);
-  const d = o < i, c = o >= 2;
-  return {
+  t && r && (i = Math.ceil(t / r)), e && r && (o = Math.floor(e / r) + 1);
+  const c = o < i, f = o >= 2, l = n(a.data);
+  return Array.isArray(l?.data?.data) && (l.data = l.data.data), {
     meta: {
-      ...t?.meta,
+      ...a?.meta,
       pagination: {
-        ...t?.meta?.pagination,
+        ...a?.meta?.pagination,
         ...i && { pages: i },
         ...o && { page: o },
-        hasNextPage: d,
-        hasPrevPage: c
+        hasNextPage: c,
+        hasPrevPage: f
       }
     },
-    data: n(t.data)
+    data: n(a.data)
   };
 };
 export {
-  f as normalize,
+  m as normalize,
   n as normalizeContent,
-  s as normalizeNestedAttributes
+  d as normalizeNestedAttributes
 };

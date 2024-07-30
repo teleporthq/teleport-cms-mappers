@@ -109,6 +109,12 @@ export const normalize = (content: any): NormalizedContent => {
   const hasNextPage = page < pages
   const hasPrevPage = page >= 2
 
+  const normalizedContent = normalizeContent(content.data)
+  // We need to make sure that we do not have nested data.data
+  if (Array.isArray(normalizedContent?.data?.data)) {
+    normalizedContent.data = normalizedContent.data.data
+  }
+
   return {
     meta: {
       ...content?.meta,
