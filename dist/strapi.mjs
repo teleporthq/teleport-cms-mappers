@@ -17,12 +17,12 @@ const s = (t) => {
   }
   return a;
 }, l = (t) => {
-  if (t == null || typeof t == "object" && !Object.keys(t).length)
-    return null;
   if (Array.isArray(t))
     return {
       data: t.map(l)
     };
+  if (t == null || typeof t == "object" && !Object.keys(t).length)
+    return null;
   let a = { ...t };
   return t.attributes && (a = {
     ...a,
