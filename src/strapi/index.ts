@@ -60,18 +60,18 @@ export const normalizeNestedAttributes = (
 }
 
 export const normalizeContent = (input: any): any => {
+  if (Array.isArray(input)) {
+    return {
+      data: input.map(normalizeContent),
+    }
+  }
+
   if (
     input === null ||
     input === undefined ||
     (typeof input === 'object' && !Object.keys(input).length)
   ) {
     return null
-  }
-
-  if (Array.isArray(input)) {
-    return {
-      data: input.map(normalizeContent),
-    }
   }
 
   let output = { ...input }
