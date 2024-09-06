@@ -15,7 +15,7 @@ type NormalizedContent = {
   data: unknown[] | unknown
 }
 
-const toPlainObject = (obj: any): any => {
+const toPlainObject = (obj: any, strapiUrl?: string): any => {
   if (typeof obj !== 'object' || obj === null) {
     return obj
   }
@@ -26,11 +26,19 @@ const toPlainObject = (obj: any): any => {
     plainObj[key] = toPlainObject(obj[key])
   }
 
+  if (typeof plainObj['url'] === 'string' && plainObj['url'].startsWith('/')) {
+    if (!strapiUrl) {
+      strapiUrl = process.env.CMS_URL
+    }
+    plainObj['url'] = `${strapiUrl}${plainObj['url']}`
+  }
+
   return plainObj
 }
 
 export const normalizeNestedAttributes = (
-  attributes: Record<string, any>
+  attributes: Record<string, any>,
+  strapiUrl?: string
 ): Record<string, unknown> => {
   const output: Record<string, unknown> = {}
 
@@ -45,24 +53,24 @@ export const normalizeNestedAttributes = (
       'id' in value.data &&
       'attributes' in value.data
     ) {
-      const normalizedValue = normalizeContent(value)
+      const normalizedValue = normalizeContent(value, strapiUrl)
       output[key] = { id: value.data.id, ...normalizedValue }
     } else if (Array.isArray(value)) {
       output[key] = value.map((el: any) => {
-        return normalizeNestedAttributes(el)
+        return normalizeNestedAttributes(el, strapiUrl)
       })
     } else {
-      output[key] = toPlainObject(value)
+      output[key] = toPlainObject(value, strapiUrl)
     }
   }
 
   return output
 }
 
-export const normalizeContent = (input: any): any => {
+export const normalizeContent = (input: any, strapiUrl?: string): any => {
   if (Array.isArray(input)) {
     return {
-      data: input.map(normalizeContent),
+      data: input.map((value) => normalizeContent(value, strapiUrl)),
     }
   }
 
@@ -79,19 +87,26 @@ export const normalizeContent = (input: any): any => {
   if (input.attributes) {
     output = {
       ...output,
-      ...normalizeNestedAttributes(input.attributes),
+      ...normalizeNestedAttributes(input.attributes, strapiUrl),
     }
     delete output.attributes
   }
 
   if (input.data) {
-    output = normalizeContent(input.data)
+    output = normalizeContent(input.data, strapiUrl)
+  }
+
+  if (output.url?.startsWith('/')) {
+    if (!strapiUrl) {
+      strapiUrl = process.env.CMS_URL
+    }
+    output.url = `${strapiUrl}${output.url}`
   }
 
   return output
 }
 
-export const normalize = (content: any): NormalizedContent => {
+export const normalize = (content: any, strapiUrl?: string): NormalizedContent => {
   const total = content?.meta?.pagination?.total
   const limit = content?.meta?.pagination?.limit
   const start = content?.meta?.pagination?.start
@@ -109,7 +124,7 @@ export const normalize = (content: any): NormalizedContent => {
   const hasNextPage = page < pages
   const hasPrevPage = page >= 2
 
-  let normalizedContent = normalizeContent(content.data)
+  let normalizedContent = normalizeContent(content.data, strapiUrl)
   // We need to make sure that we do not have nested data.data
   if (normalizedContent.data) {
     normalizedContent = normalizedContent.data
