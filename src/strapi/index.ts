@@ -23,7 +23,19 @@ const toPlainObject = (obj: any, strapiUrl?: string): any => {
   const plainObj: Record<string, unknown> = {}
 
   for (const key in obj) {
-    plainObj[key] = toPlainObject(obj[key])
+    if (
+      typeof obj[key] === 'object' &&
+      obj[key] !== null &&
+      'data' in obj[key] &&
+      obj[key].data !== null &&
+      'id' in obj[key].data &&
+      'attributes' in obj[key].data
+    ) {
+      const normalizedValue = normalizeContent(obj[key], strapiUrl)
+      plainObj[key] = { id: obj[key].data.id, ...normalizedValue }
+      continue
+    }
+    plainObj[key] = toPlainObject(obj[key], strapiUrl)
   }
 
   if (typeof plainObj['url'] === 'string' && plainObj['url'].startsWith('/')) {
@@ -54,6 +66,7 @@ export const normalizeNestedAttributes = (
       'attributes' in value.data
     ) {
       const normalizedValue = normalizeContent(value, strapiUrl)
+
       output[key] = { id: value.data.id, ...normalizedValue }
     } else if (Array.isArray(value)) {
       output[key] = value.map((el: any) => {
