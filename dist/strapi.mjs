@@ -1,61 +1,65 @@
-const d = (t, n) => {
+const s = (t, n) => {
   if (typeof t != "object" || t === null)
     return t;
-  const a = {};
-  for (const e in t) {
-    if (typeof t[e] == "object" && t[e] !== null && "data" in t[e] && t[e].data !== null && "id" in t[e].data && "attributes" in t[e].data) {
-      const i = r(t[e], n);
-      a[e] = { id: t[e].data.id, ...i };
+  const e = {};
+  if (Array.isArray(t))
+    return t.map((a) => u({ obj: { data: { ...a } } }).obj);
+  for (const a in t) {
+    if (typeof t[a] == "object" && t[a] !== null && "data" in t[a] && t[a].data !== null && "id" in t[a].data && "attributes" in t[a].data) {
+      const i = o(t[a], n);
+      e[a] = { id: t[a].data.id, ...i };
       continue;
     }
-    a[e] = d(t[e], n);
+    if (a === "data")
+      return s(t[a], n);
+    e[a] = s(t[a], n);
   }
-  return typeof a.url == "string" && a.url.startsWith("/") && (n || (n = process.env.CMS_URL), a.url = `${n}${a.url}`), a;
+  return typeof e.url == "string" && e.url.startsWith("/") && (n || (n = process.env.CMS_URL), e.url = `${n}${e.url}`), e;
 }, u = (t, n) => {
-  const a = {};
-  for (const e in t) {
-    const i = t[e];
+  const e = {};
+  for (const a in t) {
+    const i = t[a];
     if (typeof i == "object" && i !== null && "data" in i && i.data !== null && "id" in i.data && "attributes" in i.data) {
-      const l = r(i, n);
-      a[e] = { id: i.data.id, ...l };
+      const r = o(i, n);
+      e[a] = { id: i.data.id, ...r };
     } else
-      Array.isArray(i) ? a[e] = i.map((l) => u(l, n)) : a[e] = d(i, n);
+      Array.isArray(i) ? e[a] = i.map((r) => u(r, n)) : e[a] = s(i, n);
   }
-  return a;
-}, r = (t, n) => {
+  return e;
+}, o = (t, n) => {
   if (Array.isArray(t))
     return {
-      data: t.map((e) => r(e, n))
+      data: t.map((a) => o(a, n))
     };
   if (t == null || typeof t == "object" && !Object.keys(t).length)
     return null;
-  let a = { ...t };
-  return t.attributes && (a = {
-    ...a,
+  let e = { ...t };
+  return t.attributes && (e = {
+    ...e,
     ...u(t.attributes, n)
-  }, delete a.attributes), t.data && (a = r(t.data, n)), a.url?.startsWith("/") && (n || (n = process.env.CMS_URL), a.url = `${n}${a.url}`), a;
+  }, delete e.attributes), t.data && (e = o(t.data, n)), e.url?.startsWith("/") && (n || (n = process.env.CMS_URL), e.url = `${n}${e.url}`), e;
 }, m = (t, n) => {
-  const a = t?.meta?.pagination?.total, e = t?.meta?.pagination?.limit, i = t?.meta?.pagination?.start;
-  let l = 0, o = 1;
-  a && e && (l = Math.ceil(a / e)), i && e && (o = Math.floor(i / e) + 1);
-  const f = o < l, c = o >= 2;
-  let s = r(t.data, n);
-  return s.data && (s = s.data), {
+  const e = t?.meta?.pagination?.total, a = t?.meta?.pagination?.limit, i = t?.meta?.pagination?.start;
+  let r = 0, l = 1;
+  e && a && (r = Math.ceil(e / a)), i && a && (l = Math.floor(i / a) + 1);
+  const f = l < r, c = l >= 2;
+  let d = o(t.data, n);
+  return d.data && (d = d.data), {
     meta: {
       ...t?.meta,
       pagination: {
         ...t?.meta?.pagination,
-        ...l && { pages: l },
-        ...o && { page: o },
+        ...r && { pages: r },
+        ...l && { page: l },
         hasNextPage: f,
         hasPrevPage: c
       }
     },
-    data: s
+    data: d
   };
 };
 export {
   m as normalize,
-  r as normalizeContent,
+  o as normalizeContent,
   u as normalizeNestedAttributes
 };

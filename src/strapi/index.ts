@@ -22,6 +22,10 @@ const toPlainObject = (obj: any, strapiUrl?: string): any => {
 
   const plainObj: Record<string, unknown> = {}
 
+  if (Array.isArray(obj)) {
+    return obj.map((el) => normalizeNestedAttributes({ obj: { data: { ...el } } }).obj)
+  }
+
   for (const key in obj) {
     if (
       typeof obj[key] === 'object' &&
@@ -35,6 +39,11 @@ const toPlainObject = (obj: any, strapiUrl?: string): any => {
       plainObj[key] = { id: obj[key].data.id, ...normalizedValue }
       continue
     }
+
+    if (key === 'data') {
+      return toPlainObject(obj[key], strapiUrl)
+    }
+
     plainObj[key] = toPlainObject(obj[key], strapiUrl)
   }
 
