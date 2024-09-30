@@ -1,4 +1,4 @@
-import { getAPIUrlByProjectId, handleFetchResponse, normalizeList } from "./utils";
+import { getAPIUrlByProjectId, handleFetchResponse, normalizeList } from './utils'
 
 /**
  * When getting entities by page in caisy we might need to do multiple calls
@@ -10,26 +10,29 @@ import { getAPIUrlByProjectId, handleFetchResponse, normalizeList } from "./util
  * https://caisy.io/developer/docs/external-api/queries-pagination#top
  */
 export const getEntitiesByPage = async (params: {
-  projectId: string,
-  query: string,
-  page: string,
-  perPage: string,
+  projectId: string
+  query: string
+  page: string
+  perPage: string
   after?: string
 }) => {
   // restParams is used for sending the filter parameters for the query
   const { projectId, query, perPage, after = '', page, ...restParams } = params
   const url = getAPIUrlByProjectId(projectId)
 
-  const requestedPage = Number.parseInt(params['page'] ?? "1")
-  const requestedPerPage = Number.parseInt(params['perPage'] ?? "10")
+  const requestedPage = Number.parseInt(params['page'] ?? '1')
+  const requestedPerPage = Number.parseInt(params['perPage'] ?? '10')
 
-  const firstParam = !after ? (requestedPage > 1 ? requestedPage -1 : requestedPage ) * requestedPerPage : requestedPerPage
+  const firstParam = !after
+    ? (requestedPage > 1 ? requestedPage - 1 : requestedPage) * requestedPerPage
+    : requestedPerPage
 
   const response = await fetch(url, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "x-caisy-token": process.env.CMS_ACCESS_TOKEN,
+      'Content-Type': 'application/json',
+      'x-caisy-token': process.env.CMS_ACCESS_TOKEN,
+      'x-caisy-preview': true,
     },
     body: JSON.stringify({
       query,
@@ -37,7 +40,7 @@ export const getEntitiesByPage = async (params: {
         first: firstParam,
         after,
         ...restParams,
-      }
+      },
     }),
   })
 
@@ -53,7 +56,10 @@ export const getEntitiesByPage = async (params: {
   // if hasNextPage is false, no need to look for the next page, just return this one for now
   // if requestedPage is 1, no need for the second call
   if (requestedPage === 1 || !hasNextPage || after) {
-    return normalizeList(responseJSON.data[Object.keys(responseJSON.data)[0]], requestedPage.toString())
+    return normalizeList(
+      responseJSON.data[Object.keys(responseJSON.data)[0]],
+      requestedPage.toString()
+    )
   }
 
   return await getEntitiesByPage({

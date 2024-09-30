@@ -1,18 +1,15 @@
-import { getAPIUrlByProjectId, handleFetchResponse, normalizeList } from "./utils";
+import { getAPIUrlByProjectId, handleFetchResponse, normalizeList } from './utils'
 
-export const getEntitiesData = async (params: {
-  projectId: string,
-  query: string,
-}
-) => {
+export const getEntitiesData = async (params: { projectId: string; query: string }) => {
   const { projectId, query } = params
   const url = getAPIUrlByProjectId(projectId)
 
   const response = await fetch(url, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "x-caisy-token": process.env.CMS_ACCESS_TOKEN,
+      'Content-Type': 'application/json',
+      'x-caisy-token': process.env.CMS_ACCESS_TOKEN,
+      'x-caisy-preview': true,
     },
     body: JSON.stringify({
       query,

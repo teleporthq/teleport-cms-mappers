@@ -21,6 +21,7 @@ export const getDataByAttribute = async (params: {
       headers: {
         'Content-Type': 'application/json',
         'x-caisy-token': process.env.CMS_ACCESS_TOKEN,
+        'x-caisy-preview': true,
       },
       body: JSON.stringify({
         query,

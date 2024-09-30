@@ -9,6 +9,7 @@ export const getSingleEntity = async (params: { projectId: string; query: string
     headers: {
       'Content-Type': 'application/json',
       'x-caisy-token': process.env.CMS_ACCESS_TOKEN,
+      'x-caisy-preview': true,
     },
     body: JSON.stringify({
       query,

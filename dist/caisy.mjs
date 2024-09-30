@@ -28,7 +28,7 @@ const l = (e, t) => {
     },
     data: [c(t)]
   };
-}, c = (e) => Array.isArray(e) && !e.length ? [] : e == null ? null : typeof e == "object" && !Object.keys(e).length ? {} : Array.isArray(e) ? e.map((t) => c(t)) : Object.keys(e._meta || {})?.length ? { ...c(u(e)) } : typeof e == "object" && e.json && e.json.type === "doc" ? b(e) : Object.keys(e).reduce((t, s) => {
+}, c = (e) => Array.isArray(e) && !e.length ? [] : e == null ? null : typeof e == "object" && !Object.keys(e).length ? {} : Array.isArray(e) ? e.map((t) => c(t)) : Object.keys(e._meta || {})?.length ? { ...c(u(e)) } : typeof e == "object" && e.json && e.json.type === "doc" ? w(e) : Object.keys(e).reduce((t, s) => {
   const r = e[s];
   return r == null ? (t[s] = null, t) : Array.isArray(r) ? (t[s] = r.map((n) => c(n)), t) : typeof r == "object" ? (t[s] = { ...c(u(r)) }, t) : (t[s] = r, t);
 }, {}), u = (e) => {
@@ -54,7 +54,7 @@ const l = (e, t) => {
     height: e.height,
     width: e.width
   }
-}), b = (e) => e.connections ? !e.json || typeof e.json == "string" ? "" : {
+}), w = (e) => e.connections ? !e.json || typeof e.json == "string" ? "" : {
   content: e.json.content.map((s) => {
     if (s.type !== "documentLink" || !e.connections)
       return s;
@@ -90,7 +90,8 @@ const l = (e, t) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-caisy-token": process.env.CMS_ACCESS_TOKEN
+      "x-caisy-token": process.env.CMS_ACCESS_TOKEN,
+      "x-caisy-preview": !0
     },
     body: JSON.stringify({
       query: s
@@ -104,7 +105,8 @@ const l = (e, t) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-caisy-token": process.env.CMS_ACCESS_TOKEN
+        "x-caisy-token": process.env.CMS_ACCESS_TOKEN,
+        "x-caisy-preview": !0
       },
       body: JSON.stringify({
         query: s,
@@ -117,17 +119,18 @@ const l = (e, t) => {
   } catch (a) {
     throw new Error(a.message);
   }
-}, P = async (e) => {
-  const { projectId: t, query: s, perPage: r, after: n = "", page: a, ...o } = e, m = d(t), i = Number.parseInt(e.page ?? "1"), f = Number.parseInt(e.perPage ?? "10"), p = n ? f : (i > 1 ? i - 1 : i) * f, h = await fetch(m, {
+}, b = async (e) => {
+  const { projectId: t, query: s, perPage: r, after: n = "", page: a, ...o } = e, p = d(t), i = Number.parseInt(e.page ?? "1"), f = Number.parseInt(e.perPage ?? "10"), m = n ? f : (i > 1 ? i - 1 : i) * f, h = await fetch(p, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-caisy-token": process.env.CMS_ACCESS_TOKEN
+      "x-caisy-token": process.env.CMS_ACCESS_TOKEN,
+      "x-caisy-preview": !0
     },
     body: JSON.stringify({
       query: s,
       variables: {
-        first: p,
+        first: m,
         after: n,
         ...o
       }
@@ -136,7 +139,10 @@ const l = (e, t) => {
   if (!y.data)
     return [];
   const { endCursor: j, hasNextPage: S } = y.data[Object.keys(y.data)[0]].pageInfo;
-  return i === 1 || !S || n ? l(y.data[Object.keys(y.data)[0]], i.toString()) : await P({
+  return i === 1 || !S || n ? l(
+    y.data[Object.keys(y.data)[0]],
+    i.toString()
+  ) : await b({
     projectId: t,
     query: s,
     perPage: r,
@@ -144,19 +150,20 @@ const l = (e, t) => {
     page: i.toString(),
     after: j
   });
-}, E = async (e) => {
+}, v = async (e) => {
   const { projectId: t, query: s } = e, r = d(t), n = await fetch(r, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-caisy-token": process.env.CMS_ACCESS_TOKEN
+      "x-caisy-token": process.env.CMS_ACCESS_TOKEN,
+      "x-caisy-preview": !0
     },
     body: JSON.stringify({
       query: s
     })
   }), a = await g(n), o = a.data[Object.keys(a.data)[0]];
-  return w(o);
-}, w = (e) => {
+  return P(o);
+}, P = (e) => {
   const t = {
     pageInfo: {},
     edges: [
@@ -169,11 +176,11 @@ const l = (e, t) => {
 };
 export {
   A as getEntities,
-  P as getEntitiesWithPagination,
+  b as getEntitiesWithPagination,
   _ as getEntityByAttribute,
-  E as getSingleEntityType,
+  v as getSingleEntityType,
   O as normalizeCaisyAssetData,
   C as normalizeCaisyItemContent,
   l as normalizeCaisyListContent,
-  w as normalizeSingleTypeAsList
+  P as normalizeSingleTypeAsList
 };
