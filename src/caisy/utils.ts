@@ -137,6 +137,16 @@ const normaliseObject = (input) => {
     }
   }
 
+  // normalise location data
+  if ('latitude' in newData && 'longitude' in newData) {
+    newData = {
+      lat: newData.latitude,
+      lon: newData.longitude,
+      address: newData.formattedAddress,
+      zoom: newData.zoom,
+    }
+  }
+
   return newData
 }
 
