@@ -1,13 +1,13 @@
-const l = (e, t) => {
+const g = (e, t) => {
   let s = t ? parseInt(t) : 1;
   (!s || isNaN(s)) && (s = 1);
-  const r = e.pageInfo?.hasNextPage ?? !1, n = e.pageInfo?.hasPreviousPage ?? !1, a = e.edges.map((o) => o.node);
+  const n = e.pageInfo?.hasNextPage ?? !1, r = e.pageInfo?.hasPreviousPage ?? !1, a = e.edges.map((o) => o.node);
   return {
     meta: {
       pagination: {
         total: a.length,
-        hasNextPage: r,
-        hasPrevPage: n,
+        hasNextPage: n,
+        hasPrevPage: r,
         page: s
       }
     },
@@ -29,8 +29,8 @@ const l = (e, t) => {
     data: [c(t)]
   };
 }, c = (e) => Array.isArray(e) && !e.length ? [] : e == null ? null : typeof e == "object" && !Object.keys(e).length ? {} : Array.isArray(e) ? e.map((t) => c(t)) : Object.keys(e._meta || {})?.length ? { ...c(u(e)) } : typeof e == "object" && e.json && e.json.type === "doc" ? b(e) : Object.keys(e).reduce((t, s) => {
-  const r = e[s];
-  return r == null ? (t[s] = null, t) : Array.isArray(r) ? (t[s] = r.map((n) => c(n)), t) : typeof r == "object" ? (t[s] = { ...c(u(r)) }, t) : (t[s] = r, t);
+  const n = e[s];
+  return n == null ? (t[s] = null, t) : Array.isArray(n) ? (t[s] = n.map((r) => c(r)), t) : typeof n == "object" ? (t[s] = { ...c(u(n)) }, t) : (t[s] = n, t);
 }, {}), u = (e) => {
   let t = e;
   return t?._meta && (t = {
@@ -43,6 +43,11 @@ const l = (e, t) => {
     // typeId is used by the switch primitive to determine the content/component type of the item
     typeId: t?.__typename,
     ...t
+  }), "latitude" in t && "longitude" in t && (t = {
+    lat: t.latitude,
+    lon: t.longitude,
+    address: t.formattedAddress,
+    zoom: t.zoom
   }), t);
 }, O = (e) => ({
   id: e.id,
@@ -58,17 +63,17 @@ const l = (e, t) => {
   content: e.json.content.map((s) => {
     if (s.type !== "documentLink" || !e.connections)
       return s;
-    const r = e.connections.find(
-      (n) => n?.__typename == "Asset" && n.id === s.attrs.documentId
+    const n = e.connections.find(
+      (r) => r?.__typename == "Asset" && r.id === s.attrs.documentId
     );
-    return r && (s.attrs = {
+    return n && (s.attrs = {
       ...s.attrs,
-      src: r.src,
-      title: r.title
+      src: n.src,
+      title: n.title
     }), s;
   }),
   type: e.json.type
-} : e.json, d = (e) => `https://cloud.caisy.io/api/v3/e/${e}/graphql`, g = async (e) => {
+} : e.json, d = (e) => `https://cloud.caisy.io/api/v3/e/${e}/graphql`, l = async (e) => {
   if (e.status === 401 || e.status === 403)
     throw new Error(
       `Caisy auth or permission issue: ${e.statusText}`
@@ -85,8 +90,8 @@ const l = (e, t) => {
       )}`
     );
   return t;
-}, A = async (e) => {
-  const { projectId: t, query: s } = e, r = d(t), n = await fetch(r, {
+}, w = async (e) => {
+  const { projectId: t, query: s } = e, n = d(t), r = await fetch(n, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -95,12 +100,12 @@ const l = (e, t) => {
     body: JSON.stringify({
       query: s
     })
-  }), a = await g(n);
-  return l(a.data[Object.keys(a.data)[0]]);
+  }), a = await l(r);
+  return g(a.data[Object.keys(a.data)[0]]);
 }, _ = async (e) => {
-  const { projectId: t, query: s, attribute: r } = e, n = d(t);
+  const { projectId: t, query: s, attribute: n } = e, r = d(t);
   try {
-    const a = await fetch(n, {
+    const a = await fetch(r, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -109,16 +114,16 @@ const l = (e, t) => {
       body: JSON.stringify({
         query: s,
         variables: {
-          value: e?.[`${r}`] ?? ""
+          value: e?.[`${n}`] ?? ""
         }
       })
-    }), o = await g(a);
+    }), o = await l(a);
     return C(o);
   } catch (a) {
     throw new Error(a.message);
   }
 }, P = async (e) => {
-  const { projectId: t, query: s, perPage: r, after: n = "", page: a, ...o } = e, m = d(t), i = Number.parseInt(e.page ?? "1"), f = Number.parseInt(e.perPage ?? "10"), p = n ? f : (i > 1 ? i - 1 : i) * f, h = await fetch(m, {
+  const { projectId: t, query: s, perPage: n, after: r = "", page: a, ...o } = e, m = d(t), i = Number.parseInt(e.page ?? "1"), f = Number.parseInt(e.perPage ?? "10"), p = r ? f : (i > 1 ? i - 1 : i) * f, h = await fetch(m, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -128,24 +133,24 @@ const l = (e, t) => {
       query: s,
       variables: {
         first: p,
-        after: n,
+        after: r,
         ...o
       }
     })
-  }), y = await g(h);
+  }), y = await l(h);
   if (!y.data)
     return [];
   const { endCursor: j, hasNextPage: S } = y.data[Object.keys(y.data)[0]].pageInfo;
-  return i === 1 || !S || n ? l(y.data[Object.keys(y.data)[0]], i.toString()) : await P({
+  return i === 1 || !S || r ? g(y.data[Object.keys(y.data)[0]], i.toString()) : await P({
     projectId: t,
     query: s,
-    perPage: r,
+    perPage: n,
     ...o,
     page: i.toString(),
     after: j
   });
 }, E = async (e) => {
-  const { projectId: t, query: s } = e, r = d(t), n = await fetch(r, {
+  const { projectId: t, query: s } = e, n = d(t), r = await fetch(n, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -154,9 +159,9 @@ const l = (e, t) => {
     body: JSON.stringify({
       query: s
     })
-  }), a = await g(n), o = a.data[Object.keys(a.data)[0]];
-  return w(o);
-}, w = (e) => {
+  }), a = await l(r), o = a.data[Object.keys(a.data)[0]];
+  return A(o);
+}, A = (e) => {
   const t = {
     pageInfo: {},
     edges: [
@@ -165,15 +170,15 @@ const l = (e, t) => {
       }
     ]
   };
-  return l(t);
+  return g(t);
 };
 export {
-  A as getEntities,
+  w as getEntities,
   P as getEntitiesWithPagination,
   _ as getEntityByAttribute,
   E as getSingleEntityType,
   O as normalizeCaisyAssetData,
   C as normalizeCaisyItemContent,
-  l as normalizeCaisyListContent,
-  w as normalizeSingleTypeAsList
+  g as normalizeCaisyListContent,
+  A as normalizeSingleTypeAsList
 };
