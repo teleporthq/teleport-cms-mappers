@@ -1,7 +1,7 @@
 import { getAPIUrlByProjectId, handleFetchResponse, normalizeList } from './utils'
 
 export const getSingleEntity = async (params: { projectId: string; query: string }) => {
-  const { projectId, query } = params
+  const { projectId, query, ...restParams } = params
   const url = getAPIUrlByProjectId(projectId)
 
   const response = await fetch(url, {
@@ -12,6 +12,9 @@ export const getSingleEntity = async (params: { projectId: string; query: string
     },
     body: JSON.stringify({
       query,
+      variables: {
+        ...restParams,
+      },
     }),
   })
 

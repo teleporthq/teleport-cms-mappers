@@ -12,7 +12,7 @@ export const getDataByAttribute = async (params: {
   query: string
   attribute: string
 }) => {
-  const { projectId, query, attribute } = params
+  const { projectId, query, attribute, ...restParams } = params
   const url = getAPIUrlByProjectId(projectId)
 
   try {
@@ -26,6 +26,7 @@ export const getDataByAttribute = async (params: {
         query,
         variables: {
           value: params?.[`${attribute}`] ?? '',
+          ...restParams,
         },
       }),
     })
